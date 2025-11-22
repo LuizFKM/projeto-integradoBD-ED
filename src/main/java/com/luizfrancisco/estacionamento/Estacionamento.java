@@ -4,6 +4,8 @@
 
 package com.luizfrancisco.estacionamento;
 
+import com.luizfrancisco.estacionamento.view.Login;
+
 /**
  *
  * @author User
@@ -11,7 +13,6 @@ package com.luizfrancisco.estacionamento;
 public class Estacionamento {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
-       
+        new Login().setVisible(true);
     }
 }
