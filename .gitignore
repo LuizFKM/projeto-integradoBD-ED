@@ -1,0 +1,6 @@
+# Ignorar arquivos gerados pelo Maven
+target/
+*.class
+# Arquivos de IDE (se aplicável, como VS Code ou IntelliJ)
+.idea/
+.vscode/
