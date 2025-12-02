@@ -4,15 +4,17 @@
  */
 package com.luizfrancisco.estacionamento.view;
 
+import com.luizfrancisco.estacionamento.dao.ClienteDAO;
+import com.luizfrancisco.estacionamento.dao.VeiculoDAO;
+import com.luizfrancisco.estacionamento.model.Cliente;
+
 /**
  *
  * @author User
  */
 public class Principal extends javax.swing.JFrame {
-
-    /**
-     * Creates new form Principal
-     */
+    private static final VeiculoDAO vDAO = new VeiculoDAO();
+    private static final ClienteDAO cDAO = new ClienteDAO();
     public Principal() {
         initComponents();
     }
@@ -29,9 +31,9 @@ public class Principal extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        txtNome = new javax.swing.JTextField();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtNomeClienteOp = new javax.swing.JTextField();
+        txtEmailClienteOp = new javax.swing.JTextField();
+        txtTelefoneClienteOp = new javax.swing.JTextField();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jTextField5 = new javax.swing.JTextField();
@@ -44,7 +46,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        salvarOperacao = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jTextField7 = new javax.swing.JTextField();
@@ -79,11 +81,16 @@ public class Principal extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Cadastro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 14))); // NOI18N
 
-        txtNome.setBorder(javax.swing.BorderFactory.createTitledBorder("Nome completo do cliente"));
+        txtNomeClienteOp.setBorder(javax.swing.BorderFactory.createTitledBorder("Nome completo do cliente"));
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
+        txtEmailClienteOp.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
+        txtEmailClienteOp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmailClienteOpActionPerformed(evt);
+            }
+        });
 
-        jTextField2.setBorder(javax.swing.BorderFactory.createTitledBorder("Telefone"));
+        txtTelefoneClienteOp.setBorder(javax.swing.BorderFactory.createTitledBorder("Telefone"));
 
         jTextField3.setBorder(javax.swing.BorderFactory.createTitledBorder("Placa do veículo"));
 
@@ -112,7 +119,12 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel3.setText("Selecione a vaga");
 
-        jButton1.setText("Salvar");
+        salvarOperacao.setText("Salvar");
+        salvarOperacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salvarOperacaoActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Limpar");
 
@@ -140,7 +152,7 @@ public class Principal extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1)
+                                .addComponent(salvarOperacao)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton2)
                                 .addGap(18, 18, 18)
@@ -169,7 +181,7 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(salvarOperacao)
                     .addComponent(jButton2)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
@@ -192,12 +204,12 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtNome, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtNomeClienteOp, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtTelefoneClienteOp, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1)
+                    .addComponent(txtEmailClienteOp)
                     .addComponent(jTextField3)
                     .addComponent(jTextField5))
                 .addGap(16, 16, 16))
@@ -208,12 +220,12 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNomeClienteOp, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEmailClienteOp, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTelefoneClienteOp, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -454,6 +466,15 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton6ActionPerformed
 
+    private void salvarOperacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salvarOperacaoActionPerformed
+        Cliente c = retornaCliente();
+        cDAO.inserir(c);
+    }//GEN-LAST:event_salvarOperacaoActionPerformed
+
+    private void txtEmailClienteOpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailClienteOpActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmailClienteOpActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -490,7 +511,6 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -524,14 +544,26 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField txtNome;
+    private javax.swing.JButton salvarOperacao;
+    private javax.swing.JTextField txtEmailClienteOp;
+    private javax.swing.JTextField txtNomeClienteOp;
+    private javax.swing.JTextField txtTelefoneClienteOp;
     // End of variables declaration//GEN-END:variables
+private Cliente retornaCliente(){
+        String nome = txtNomeClienteOp.getText();
+        String email = txtEmailClienteOp.getText();
+        String telefone = txtEmailClienteOp.getText();
+        
+        Cliente c = new Cliente();
+        c.setNome(nome);
+        c.setEmail(email);
+        c.setTelefone(telefone);
+        return c;
+    }
 }

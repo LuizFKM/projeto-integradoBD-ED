@@ -5,6 +5,7 @@
 package com.luizfrancisco.estacionamento;
 
 import com.luizfrancisco.estacionamento.view.Login;
+import com.luizfrancisco.estacionamento.view.Principal;
 
 /**
  *
@@ -13,6 +14,6 @@ import com.luizfrancisco.estacionamento.view.Login;
 public class Estacionamento {
 
     public static void main(String[] args) {
-        new Login().setVisible(true);
+        new Principal().setVisible(true);
     }
 }
