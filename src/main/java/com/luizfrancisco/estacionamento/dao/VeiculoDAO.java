@@ -8,7 +8,9 @@ import com.luizfrancisco.estacionamento.database.Conexao;
 import com.luizfrancisco.estacionamento.model.Veiculo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -16,7 +18,7 @@ import java.sql.SQLException;
  */
 public class VeiculoDAO {
     public void inserir(Veiculo v){
-        String sql = "INSERT INTO veiculo (modelo, cor, placa, id_cliente) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO veiculo (modelo, cor, placa, id_cliente) VALUES (?, ?, ?, ?)";
         
             try(Connection con = Conexao.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql);){
@@ -25,6 +27,7 @@ public class VeiculoDAO {
                 ps.setString(3, v.getPlaca());
                 ps.setInt(4, v.getCliente().getId());
                 ps.executeUpdate();
+
             }catch(SQLException e){
                 System.out.println("ERRO -> " + e);
             }

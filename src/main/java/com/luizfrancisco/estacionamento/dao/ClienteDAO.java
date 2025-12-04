@@ -7,7 +7,9 @@ import com.luizfrancisco.estacionamento.database.Conexao;
 import com.luizfrancisco.estacionamento.model.Cliente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 /**
  *
  * @author User
@@ -22,8 +24,11 @@ public class ClienteDAO {
                 ps.setString(2, c.getEmail());
                 ps.setString(3, c.getTelefone());
                 ps.executeUpdate();
+   
         }catch(SQLException e){
                 System.out.println("ERRO -> " + e);
             }
     }
+    
+    
 }

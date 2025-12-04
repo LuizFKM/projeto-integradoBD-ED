@@ -14,6 +14,8 @@ public class Veiculo {
     private String modelo;
     private String cor;
     private String placa;
+    
+    public Veiculo(){}
 
     public Veiculo(int id, Cliente idCliente, String modelo, String cor, String placa) {
         this.id = id;
