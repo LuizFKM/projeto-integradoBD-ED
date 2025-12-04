@@ -4,6 +4,7 @@
  */
 package com.luizfrancisco.estacionamento.view;
 
+import com.luizfrancisco.estacionamento.controller.ClienteController;
 import com.luizfrancisco.estacionamento.dao.ClienteDAO;
 import com.luizfrancisco.estacionamento.dao.VeiculoDAO;
 import com.luizfrancisco.estacionamento.model.Cliente;
@@ -17,9 +18,14 @@ public class Principal extends javax.swing.JFrame {
     private static final VeiculoDAO vDAO = new VeiculoDAO();
     private static final ClienteDAO cDAO = new ClienteDAO();
     private Cliente clienteSelecionado = null;
+    private final ClienteController cc = new ClienteController();
     public Principal() {
         initComponents();
+        cc.atualizaTabela(tblClientesPrincipal);
+
     }
+    
+ 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,7 +46,7 @@ public class Principal extends javax.swing.JFrame {
         btnSalvarCadastroCliente1 = new javax.swing.JButton();
         btnSalvarCadastroCliente5 = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
+        tblClientesPrincipal = new javax.swing.JTable();
         Veiculo = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         txtPlacaVeiculoCadastro = new javax.swing.JTextField();
@@ -164,7 +170,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(65, Short.MAX_VALUE))
         );
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        tblClientesPrincipal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -175,7 +181,7 @@ public class Principal extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane4.setViewportView(jTable4);
+        jScrollPane4.setViewportView(tblClientesPrincipal);
 
         javax.swing.GroupLayout ClientesLayout = new javax.swing.GroupLayout(Clientes);
         Clientes.setLayout(ClientesLayout);
@@ -853,10 +859,10 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable4;
     private javax.swing.JTable jTable5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField8;
+    private javax.swing.JTable tblClientesPrincipal;
     private javax.swing.JTextField txtBuscarOperacao;
     private javax.swing.JTextField txtCorOp;
     private javax.swing.JTextField txtCorVeiculoCadastro;
