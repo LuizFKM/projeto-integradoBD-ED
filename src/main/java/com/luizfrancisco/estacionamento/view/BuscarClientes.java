@@ -16,6 +16,7 @@ public class BuscarClientes extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BuscarClientes.class.getName());
     private Principal origem;
     private ClienteController cc = new ClienteController();
+    private int linhaSelecionada = -1;
 
     /**
      * Creates new form BuscarClientes
@@ -69,6 +70,11 @@ public class BuscarClientes extends javax.swing.JFrame {
         jRadioButton1.setText("Nome");
 
         jRadioButton2.setText("Código");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
 
         btnSelecionar.setText("Selecionar");
         btnSelecionar.addActionListener(new java.awt.event.ActionListener() {
@@ -88,6 +94,11 @@ public class BuscarClientes extends javax.swing.JFrame {
                 "ID", "Nome", "Email", "Telefone"
             }
         ));
+        tblBuscarClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBuscarClientesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblBuscarClientes);
         if (tblBuscarClientes.getColumnModel().getColumnCount() > 0) {
             tblBuscarClientes.getColumnModel().getColumn(0).setResizable(false);
@@ -157,9 +168,36 @@ public class BuscarClientes extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnSelecionarActionPerformed
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
 
-    }//GEN-LAST:event_btnBuscarActionPerformed
+    private void tblBuscarClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBuscarClientesMouseClicked
+        linhaSelecionada = tblBuscarClientes.getSelectedRow();
+        if(linhaSelecionada > -1){
+            int id;
+            Object idObj = tblBuscarClientes.getValueAt(linhaSelecionada, 0);
+            
+            if(idObj instanceof Integer){
+                id = (Integer) idObj;
+            }else {
+                id = Integer.parseInt(idObj.toString());
+            }
+            
+            String nome = (String) tblBuscarClientes.getValueAt(linhaSelecionada, 1);
+            String email = (String) tblBuscarClientes.getValueAt(linhaSelecionada, 2);
+            String telefone = (String) tblBuscarClientes.getValueAt(linhaSelecionada, 3);
+            
+            Cliente c = new Cliente(id, nome, email, telefone);
+            
+                if (this.origem != null) {
+                    this.origem.preencherCliente(c);
+                }
+                this.dispose();
+        }else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente na tabela.");
+        }
+    }//GEN-LAST:event_tblBuscarClientesMouseClicked
 
     /**
      * @param args the command line arguments
