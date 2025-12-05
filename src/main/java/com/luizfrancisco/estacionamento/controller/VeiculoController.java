@@ -31,7 +31,9 @@ public class VeiculoController {
                 v.getId(),
                 v.getPlaca(),
                 v.getModelo(),
+                v.getCor(),
                 v.getCliente().getNome(),
+                v.getCliente().getEmail(),
                 
             });
         }

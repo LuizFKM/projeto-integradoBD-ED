@@ -38,7 +38,7 @@ public class VeiculoDAO {
 public List<Veiculo> listarVeiculo() {
     List<Veiculo> listaVeiculos = new ArrayList<>();
     
-    String sql = "SELECT v.id_veiculo, v.modelo, v.cor, v.placa,c.id_cliente, c.nome, c.email "
+    String sql = "SELECT v.id_veiculo, v.modelo, v.cor, v.placa,c.id_cliente, c.nome, c.email"
             + " FROM veiculo AS v INNER JOIN cliente AS c ON "
             + "v.id_cliente = c.id_cliente";
 

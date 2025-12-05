@@ -6,6 +6,8 @@ package com.luizfrancisco.estacionamento.view;
 
 import com.luizfrancisco.estacionamento.controller.ClienteController;
 import com.luizfrancisco.estacionamento.controller.VeiculoController;
+import com.luizfrancisco.estacionamento.model.Veiculo;
+import com.luizfrancisco.estacionamento.model.Cliente;
 
 /**
  *
@@ -15,6 +17,7 @@ public class BuscarVeiculo extends javax.swing.JFrame {
     private Principal origem;
     private ClienteController cc = new ClienteController();
     private VeiculoController vc = new VeiculoController();
+    private int linhaSelecionada = -1;
     /**
      * Creates new form BuscarVeiculo
      */
@@ -78,13 +81,13 @@ public class BuscarVeiculo extends javax.swing.JFrame {
 
         tblBuscarVeiculos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Placa", "Modelo", "Nome Cliente"
+                "ID", "Placa", "Modelo", "Cor", "Nome Cliente"
             }
         ));
         jScrollPane1.setViewportView(tblBuscarVeiculos);
@@ -146,7 +149,38 @@ public class BuscarVeiculo extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void btnSelecionarVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarVeiculoActionPerformed
+        linhaSelecionada = tblBuscarVeiculos.getSelectedRow();
+        if(linhaSelecionada > -1){
+            
+            int id;
+            Object idObj = tblBuscarVeiculos.getValueAt(linhaSelecionada, 0);
+            
+            if(idObj instanceof Integer){
+                id = (Integer) idObj;
+            }else {
+                id = Integer.parseInt(idObj.toString());
+            }
+            
+            String placa = (String) tblBuscarVeiculos.getValueAt(linhaSelecionada, 1);
+            String modelo = (String) tblBuscarVeiculos.getValueAt(linhaSelecionada, 2);
+            String cor = (String) tblBuscarVeiculos.getValueAt(linhaSelecionada, 3);
+            String nomeCliente = tblBuscarVeiculos.getValueAt(linhaSelecionada, 4).toString();
+            
+            
+            
+            Cliente cliente = new Cliente(); 
+            cliente.setNome(nomeCliente);
 
+            
+            Veiculo v = new Veiculo(id, cliente, modelo, cor, placa);
+            
+                if (this.origem != null) {
+                    this.origem.preencherVeiculo(v);
+                }
+                this.dispose();
+        }else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente na tabela.");
+        }
     }//GEN-LAST:event_btnSelecionarVeiculoActionPerformed
 
     private void btnPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlacaActionPerformed

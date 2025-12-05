@@ -18,6 +18,7 @@ public class Principal extends javax.swing.JFrame {
     private static final VeiculoDAO vDAO = new VeiculoDAO();
     private static final ClienteDAO cDAO = new ClienteDAO();
     private Cliente clienteSelecionado = null;
+    private Veiculo veiculoSelecionado = null;
     private final ClienteController cc = new ClienteController();
     
     private int linha = -1;
@@ -70,7 +71,6 @@ public class Principal extends javax.swing.JFrame {
         btnSalvarCadastroCliente9 = new javax.swing.JButton();
         btnSalvarCadastroCliente10 = new javax.swing.JButton();
         btnSalvarCadastroCliente11 = new javax.swing.JButton();
-        txtEmailOp = new javax.swing.JTextField();
         lblBuscarVeiculo = new javax.swing.JLabel();
         txtNomeClienteOp = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
@@ -364,13 +364,6 @@ public class Principal extends javax.swing.JFrame {
 
         btnSalvarCadastroCliente11.setText("Editar");
 
-        txtEmailOp.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
-        txtEmailOp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEmailOpActionPerformed(evt);
-            }
-        });
-
         lblBuscarVeiculo.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
         lblBuscarVeiculo.setForeground(new java.awt.Color(0, 51, 204));
         lblBuscarVeiculo.setText("Buscar Veículo");
@@ -474,10 +467,7 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addComponent(txtNomeClienteOp, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtEmailOp, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtNomeClienteOp, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel13Layout.createSequentialGroup()
                                 .addComponent(cbxVagas, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -502,9 +492,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(txtModeloOp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCorOp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNomeClienteOp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtEmailOp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txtNomeClienteOp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -787,10 +775,6 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCorOpActionPerformed
 
-    private void txtEmailOpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailOpActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtEmailOpActionPerformed
-
     private void lblBuscarVeiculoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBuscarVeiculoMouseClicked
        new BuscarVeiculo(this).setVisible(true);
     }//GEN-LAST:event_lblBuscarVeiculoMouseClicked
@@ -922,7 +906,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField txtCorOp;
     private javax.swing.JTextField txtCorVeiculoCadastro;
     private javax.swing.JTextField txtEmailClienteCadastro;
-    private javax.swing.JTextField txtEmailOp;
     private javax.swing.JTextField txtModeloOp;
     private javax.swing.JTextField txtModeloVeiculoCadastro;
     private javax.swing.JTextField txtNomeClienteCadastro;
@@ -967,4 +950,12 @@ public void preencherCliente(Cliente c){
         this.clienteSelecionado = c;
         txtNomeClienteVeiculo.setText(c.getNome());
     }
+public void preencherVeiculo(Veiculo v){
+        this.veiculoSelecionado = v;
+        txtPlacaOp.setText(v.getPlaca());
+        txtModeloOp.setText(v.getModelo());
+        txtCorOp.setText(v.getCor());
+        txtNomeClienteOp.setText(v.getCliente().getNome());
+    }
+
 }

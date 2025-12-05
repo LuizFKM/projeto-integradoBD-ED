@@ -24,6 +24,17 @@ public class Veiculo {
         this.cor = cor;
         this.placa = placa;
     }
+    
+    public Veiculo(int id, String modelo, String cor, String placa) {
+        this.id = id;
+        this.modelo = modelo;
+        this.cor = cor;
+        this.placa = placa;
+    }
+    
+    public Veiculo(Cliente c){
+        this.idCliente = c;
+    }
 
     public int getId() {
         return id;
