@@ -9,7 +9,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author User
@@ -28,6 +29,33 @@ public class ClienteDAO {
         }catch(SQLException e){
                 System.out.println("ERRO -> " + e);
             }
+    }
+    
+    public List<Cliente> listar(){
+        List<Cliente> lista = new ArrayList<>();
+        
+        String sql = "SELECT id_cliente, nome, email, telefone FROM cliente c";
+        
+        try(Connection con = Conexao.getConnection(); 
+                PreparedStatement ps = con.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()){
+            while(rs.next()){
+                Cliente c = new Cliente();
+                
+                c.setId(rs.getInt("id_cliente"));
+                c.setNome(rs.getString("nome"));
+                c.setEmail(rs.getString("email"));
+                c.setTelefone(rs.getString("telefone"));
+                
+                lista.add(c);
+                
+            }
+        
+        }catch(SQLException e){
+            System.out.println("Erro ao listar cliente" + e);
+        
+        }
+        return lista;
     }
     
     

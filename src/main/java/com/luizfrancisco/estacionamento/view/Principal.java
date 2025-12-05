@@ -4,10 +4,12 @@
  */
 package com.luizfrancisco.estacionamento.view;
 
+import com.luizfrancisco.estacionamento.controller.ClienteController;
 import com.luizfrancisco.estacionamento.dao.ClienteDAO;
 import com.luizfrancisco.estacionamento.dao.VeiculoDAO;
 import com.luizfrancisco.estacionamento.model.Cliente;
 import com.luizfrancisco.estacionamento.model.Veiculo;
+import javax.swing.JOptionPane;
 /**
  *
  * @author User
@@ -15,9 +17,18 @@ import com.luizfrancisco.estacionamento.model.Veiculo;
 public class Principal extends javax.swing.JFrame {
     private static final VeiculoDAO vDAO = new VeiculoDAO();
     private static final ClienteDAO cDAO = new ClienteDAO();
+    private Cliente clienteSelecionado = null;
+    private final ClienteController cc = new ClienteController();
+    
+    private int linha = -1;
+    
     public Principal() {
         initComponents();
+        cc.atualizaTabela(tblClientesPrincipal);
+
     }
+    
+ 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,7 +49,7 @@ public class Principal extends javax.swing.JFrame {
         btnSalvarCadastroCliente1 = new javax.swing.JButton();
         btnSalvarCadastroCliente5 = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
+        tblClientesPrincipal = new javax.swing.JTable();
         Veiculo = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         txtPlacaVeiculoCadastro = new javax.swing.JTextField();
@@ -90,6 +101,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -162,7 +174,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap(65, Short.MAX_VALUE))
         );
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        tblClientesPrincipal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -173,7 +185,7 @@ public class Principal extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane4.setViewportView(jTable4);
+        jScrollPane4.setViewportView(tblClientesPrincipal);
 
         javax.swing.GroupLayout ClientesLayout = new javax.swing.GroupLayout(Clientes);
         Clientes.setLayout(ClientesLayout);
@@ -210,6 +222,11 @@ public class Principal extends javax.swing.JFrame {
         txtModeloVeiculoCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder("Modelo"));
 
         btnSalvarCadastroCliente6.setText("Salvar");
+        btnSalvarCadastroCliente6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarCadastroCliente6ActionPerformed(evt);
+            }
+        });
 
         btnSalvarCadastroCliente7.setText("Deletar");
 
@@ -278,16 +295,28 @@ public class Principal extends javax.swing.JFrame {
 
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Placa", "Modelo", "Cor", "Nome Cliente"
             }
         ));
+        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable3MouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(jTable3);
+        if (jTable3.getColumnModel().getColumnCount() > 0) {
+            jTable3.getColumnModel().getColumn(0).setResizable(false);
+            jTable3.getColumnModel().getColumn(1).setResizable(false);
+            jTable3.getColumnModel().getColumn(2).setResizable(false);
+            jTable3.getColumnModel().getColumn(3).setResizable(false);
+            jTable3.getColumnModel().getColumn(4).setResizable(false);
+        }
 
         javax.swing.GroupLayout VeiculoLayout = new javax.swing.GroupLayout(Veiculo);
         Veiculo.setLayout(VeiculoLayout);
@@ -630,22 +659,35 @@ public class Principal extends javax.swing.JFrame {
                 .addGap(14, 14, 14))
         );
 
+        jButton7.setText("Liberar");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jButton5)
-                        .addGap(4, 4, 4)
-                        .addComponent(jButton6)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel5)
+                        .addGap(150, 150, 150))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jTextField8)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
+                                .addComponent(jButton5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton7)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(33, Short.MAX_VALUE))
         );
@@ -662,7 +704,8 @@ public class Principal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton5)
-                            .addComponent(jButton6)))
+                            .addComponent(jButton6)
+                            .addComponent(jButton7)))
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(130, Short.MAX_VALUE))
         );
@@ -759,6 +802,20 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSalvarCadastroClienteActionPerformed
 
+    private void btnSalvarCadastroCliente6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarCadastroCliente6ActionPerformed
+       if(retornaVeiculo() != null){
+           vDAO.inserir(retornaVeiculo());
+       }
+    }//GEN-LAST:event_btnSalvarCadastroCliente6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTable3MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -813,6 +870,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton btnSalvarCadastroCliente9;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -840,10 +898,10 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable4;
     private javax.swing.JTable jTable5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField8;
+    private javax.swing.JTable tblClientesPrincipal;
     private javax.swing.JTextField txtBuscarOperacao;
     private javax.swing.JTextField txtCorOp;
     private javax.swing.JTextField txtCorVeiculoCadastro;
@@ -870,21 +928,27 @@ private Cliente retornaCliente(){
         return c;
     }
 
-private Veiculo retornaVeiculo(Cliente dono){
-        String placa = txtPlacaOp.getText();
-        String modelo = txtModeloOp.getText();
-        String cor = txtCorOp.getText();
+private Veiculo retornaVeiculo(){
+        String placa = txtPlacaVeiculoCadastro.getText();
+        String modelo = txtModeloVeiculoCadastro.getText();
+        String cor = txtCorVeiculoCadastro.getText();
+        
+        if(this.clienteSelecionado == null){
+            JOptionPane.showMessageDialog(this, "Não foi selecionado nenhum cliente", "ERRO", JOptionPane.WARNING_MESSAGE);
+            return null;
+        }
         
         Veiculo v = new Veiculo();
         v.setCor(cor);
         v.setModelo(modelo);
         v.setPlaca(placa);
-        v.setCliente(dono);
         
+        v.setCliente(this.clienteSelecionado);
         return v;
     }
 
 public void preencherCliente(Cliente c){
+        this.clienteSelecionado = c;
         txtNomeClienteVeiculo.setText(c.getNome());
     }
 }

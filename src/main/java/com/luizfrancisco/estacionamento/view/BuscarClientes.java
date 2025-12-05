@@ -4,6 +4,7 @@
  */
 package com.luizfrancisco.estacionamento.view;
 
+import com.luizfrancisco.estacionamento.controller.ClienteController;
 import com.luizfrancisco.estacionamento.model.Cliente;
 
 /**
@@ -14,16 +15,19 @@ public class BuscarClientes extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BuscarClientes.class.getName());
     private Principal origem;
+    private ClienteController cc = new ClienteController();
+    private int linhaSelecionada = -1;
 
     /**
      * Creates new form BuscarClientes
      */
     public BuscarClientes() {
-        initComponents();
+        initComponents(); 
     }
 
     public BuscarClientes(Principal origem) {
         initComponents();
+        cc.atualizaTabela(tblBuscarClientes);
         this.origem = origem;
     }
 
@@ -42,6 +46,8 @@ public class BuscarClientes extends javax.swing.JFrame {
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         btnSelecionar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblBuscarClientes = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,6 +65,11 @@ public class BuscarClientes extends javax.swing.JFrame {
         jRadioButton1.setText("Nome");
 
         jRadioButton2.setText("Código");
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2ActionPerformed(evt);
+            }
+        });
 
         btnSelecionar.setText("Selecionar");
         btnSelecionar.addActionListener(new java.awt.event.ActionListener() {
@@ -66,6 +77,30 @@ public class BuscarClientes extends javax.swing.JFrame {
                 btnSelecionarActionPerformed(evt);
             }
         });
+
+        tblBuscarClientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "ID", "Nome", "Email", "Telefone"
+            }
+        ));
+        tblBuscarClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBuscarClientesMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblBuscarClientes);
+        if (tblBuscarClientes.getColumnModel().getColumnCount() > 0) {
+            tblBuscarClientes.getColumnModel().getColumn(0).setResizable(false);
+            tblBuscarClientes.getColumnModel().getColumn(1).setResizable(false);
+            tblBuscarClientes.getColumnModel().getColumn(2).setResizable(false);
+            tblBuscarClientes.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -84,7 +119,8 @@ public class BuscarClientes extends javax.swing.JFrame {
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnSelecionar)))
-                .addContainerGap(242, Short.MAX_VALUE))
+                .addContainerGap(476, Short.MAX_VALUE))
+            .addComponent(jScrollPane1)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -98,7 +134,8 @@ public class BuscarClientes extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBuscar)
                     .addComponent(btnSelecionar))
-                .addContainerGap(193, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -125,6 +162,37 @@ public class BuscarClientes extends javax.swing.JFrame {
         
         this.dispose();
     }//GEN-LAST:event_btnSelecionarActionPerformed
+
+    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+    private void tblBuscarClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBuscarClientesMouseClicked
+        linhaSelecionada = tblBuscarClientes.getSelectedRow();
+        if(linhaSelecionada > -1){
+            int id;
+            Object idObj = tblBuscarClientes.getValueAt(linhaSelecionada, 0);
+            
+            if(idObj instanceof Integer){
+                id = (Integer) idObj;
+            }else {
+                id = Integer.parseInt(idObj.toString());
+            }
+            
+            String nome = (String) tblBuscarClientes.getValueAt(linhaSelecionada, 1);
+            String email = (String) tblBuscarClientes.getValueAt(linhaSelecionada, 2);
+            String telefone = (String) tblBuscarClientes.getValueAt(linhaSelecionada, 3);
+            
+            Cliente c = new Cliente(id, nome, email, telefone);
+            
+                if (this.origem != null) {
+                    this.origem.preencherCliente(c);
+                }
+                this.dispose();
+        }else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente na tabela.");
+        }
+    }//GEN-LAST:event_tblBuscarClientesMouseClicked
 
     /**
      * @param args the command line arguments
@@ -157,6 +225,8 @@ public class BuscarClientes extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable tblBuscarClientes;
     // End of variables declaration//GEN-END:variables
 }
