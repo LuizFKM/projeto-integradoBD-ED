@@ -60,6 +60,11 @@ public class BuscarClientes extends javax.swing.JFrame {
         });
 
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         jRadioButton1.setText("Nome");
 
@@ -151,6 +156,10 @@ public class BuscarClientes extends javax.swing.JFrame {
         
         this.dispose();
     }//GEN-LAST:event_btnSelecionarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     /**
      * @param args the command line arguments

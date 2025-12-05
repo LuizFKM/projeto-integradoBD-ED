@@ -747,7 +747,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEmailOpActionPerformed
 
     private void jLabel14MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel14MouseClicked
-        // TODO add your handling code here:
+       
     }//GEN-LAST:event_jLabel14MouseClicked
 
     private void txtPlacaOpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlacaOpActionPerformed

@@ -4,12 +4,15 @@
  */
 package com.luizfrancisco.estacionamento.view;
 
+import com.luizfrancisco.estacionamento.controller.ClienteController;
+
 /**
  *
  * @author npc12
  */
 public class BuscarVeiculo extends javax.swing.JFrame {
-
+    private Principal origem;
+    private ClienteController cc = new ClienteController();
     /**
      * Creates new form BuscarVeiculo
      */
@@ -28,12 +31,12 @@ public class BuscarVeiculo extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
-        btnBuscar = new javax.swing.JButton();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        btnSelecionar = new javax.swing.JButton();
+        btnBuscarVeiculo = new javax.swing.JButton();
+        btnPlaca = new javax.swing.JRadioButton();
+        btnCodigo = new javax.swing.JRadioButton();
+        btnSelecionarVeiculo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblBuscarClientes = new javax.swing.JTable();
+        tblBuscarVeiculos = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -47,25 +50,25 @@ public class BuscarVeiculo extends javax.swing.JFrame {
             }
         });
 
-        btnBuscar.setText("Buscar");
+        btnBuscarVeiculo.setText("Buscar");
 
-        jRadioButton1.setText("Placa");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnPlaca.setText("Placa");
+        btnPlaca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                btnPlacaActionPerformed(evt);
             }
         });
 
-        jRadioButton2.setText("Código");
+        btnCodigo.setText("Código");
 
-        btnSelecionar.setText("Selecionar");
-        btnSelecionar.addActionListener(new java.awt.event.ActionListener() {
+        btnSelecionarVeiculo.setText("Selecionar");
+        btnSelecionarVeiculo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSelecionarActionPerformed(evt);
+                btnSelecionarVeiculoActionPerformed(evt);
             }
         });
 
-        tblBuscarClientes.setModel(new javax.swing.table.DefaultTableModel(
+        tblBuscarVeiculos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -76,7 +79,7 @@ public class BuscarVeiculo extends javax.swing.JFrame {
                 "ID", "Placa", "Modelo", "Nome Cliente"
             }
         ));
-        jScrollPane1.setViewportView(tblBuscarClientes);
+        jScrollPane1.setViewportView(tblBuscarVeiculos);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -88,13 +91,13 @@ public class BuscarVeiculo extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnBuscarVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnSelecionar)))
+                        .addComponent(btnSelecionarVeiculo)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 913, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -106,12 +109,12 @@ public class BuscarVeiculo extends javax.swing.JFrame {
                 .addGap(41, 41, 41)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2))
+                    .addComponent(btnPlaca)
+                    .addComponent(btnCodigo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBuscar)
-                    .addComponent(btnSelecionar))
+                    .addComponent(btnBuscarVeiculo)
+                    .addComponent(btnSelecionarVeiculo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -134,13 +137,13 @@ public class BuscarVeiculo extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void btnSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarActionPerformed
+    private void btnSelecionarVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarVeiculoActionPerformed
 
-    }//GEN-LAST:event_btnSelecionarActionPerformed
+    }//GEN-LAST:event_btnSelecionarVeiculoActionPerformed
 
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+    private void btnPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlacaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    }//GEN-LAST:event_btnPlacaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,13 +181,13 @@ public class BuscarVeiculo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnSelecionar;
+    private javax.swing.JButton btnBuscarVeiculo;
+    private javax.swing.JRadioButton btnCodigo;
+    private javax.swing.JRadioButton btnPlaca;
+    private javax.swing.JButton btnSelecionarVeiculo;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTable tblBuscarClientes;
+    private javax.swing.JTable tblBuscarVeiculos;
     // End of variables declaration//GEN-END:variables
 }
