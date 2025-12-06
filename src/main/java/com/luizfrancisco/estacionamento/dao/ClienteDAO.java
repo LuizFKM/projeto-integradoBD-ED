@@ -57,6 +57,17 @@ public class ClienteDAO {
         }
         return lista;
     }
-    
+    public void deletar(int id) {
+        String sql = "DELETE FROM cliente WHERE id_cliente = ?";
+
+        try (Connection con = Conexao.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     
 }

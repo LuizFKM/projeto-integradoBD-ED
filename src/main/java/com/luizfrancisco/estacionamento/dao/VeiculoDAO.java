@@ -71,4 +71,25 @@ public List<Veiculo> listarVeiculo() {
     } 
     return listaVeiculos;
 }
+public void deletar(int id) {
+// Comando SQL adaptado: usamos id_veiculo
+    String sql = "DELETE FROM veiculo WHERE id_veiculo = ?";
+    
+    // Usando try-with-resources
+    try(Connection con = Conexao.getConnection();
+        PreparedStatement ps = con.prepareStatement(sql)){
+        
+        // 1. Define o ID do veículo a ser deletado
+        ps.setInt(1, id);
+        
+        // 2. Executa o comando DELETE
+        ps.executeUpdate();
+        
+    }catch(SQLException e){
+        // Imprime a stack trace completa para ajudar no debug
+        e.printStackTrace();
+        // Sugestão: Relançar a exceção para que o Controller possa notificar a View
+        throw new RuntimeException("Erro ao deletar veículo. Verifique se existem operações vinculadas.", e);
+    }
+}
 }

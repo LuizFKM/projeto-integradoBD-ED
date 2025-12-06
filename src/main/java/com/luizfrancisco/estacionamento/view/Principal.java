@@ -5,6 +5,7 @@
 package com.luizfrancisco.estacionamento.view;
 
 import com.luizfrancisco.estacionamento.controller.ClienteController;
+import com.luizfrancisco.estacionamento.controller.VeiculoController;
 import com.luizfrancisco.estacionamento.dao.ClienteDAO;
 import com.luizfrancisco.estacionamento.dao.VeiculoDAO;
 import com.luizfrancisco.estacionamento.model.Cliente;
@@ -20,13 +21,17 @@ public class Principal extends javax.swing.JFrame {
     private Cliente clienteSelecionado = null;
     private Veiculo veiculoSelecionado = null;
     private final ClienteController cc = new ClienteController();
+    private int linhaSelecionada = -1;
+    private final VeiculoController vc = new VeiculoController();
     
     private int linha = -1;
     
     public Principal() {
         initComponents();
         cc.atualizaTabela(tblClientesPrincipal);
-
+        vc.atualizaTabela(tblCadastroVeiculos);
+        setLocationRelativeTo(null);
+        setResizable(false);
     }
     
  
@@ -56,13 +61,13 @@ public class Principal extends javax.swing.JFrame {
         txtPlacaVeiculoCadastro = new javax.swing.JTextField();
         txtCorVeiculoCadastro = new javax.swing.JTextField();
         txtModeloVeiculoCadastro = new javax.swing.JTextField();
-        btnSalvarCadastroCliente6 = new javax.swing.JButton();
-        btnSalvarCadastroCliente7 = new javax.swing.JButton();
-        btnSalvarCadastroCliente8 = new javax.swing.JButton();
+        btnSalvarCadastroVeiculo = new javax.swing.JButton();
+        btnDeletarVeiculo = new javax.swing.JButton();
+        btnEditarVeiculo = new javax.swing.JButton();
         txtNomeClienteVeiculo = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tblCadastroVeiculos = new javax.swing.JTable();
         Operacional = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         txtPlacaOp = new javax.swing.JTextField();
@@ -183,9 +188,14 @@ public class Principal extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Id", "Nome completo", "Email", "Telefone"
             }
         ));
+        tblClientesPrincipal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblClientesPrincipalMouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(tblClientesPrincipal);
 
         javax.swing.GroupLayout ClientesLayout = new javax.swing.GroupLayout(Clientes);
@@ -222,16 +232,21 @@ public class Principal extends javax.swing.JFrame {
 
         txtModeloVeiculoCadastro.setBorder(javax.swing.BorderFactory.createTitledBorder("Modelo"));
 
-        btnSalvarCadastroCliente6.setText("Salvar");
-        btnSalvarCadastroCliente6.addActionListener(new java.awt.event.ActionListener() {
+        btnSalvarCadastroVeiculo.setText("Salvar");
+        btnSalvarCadastroVeiculo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarCadastroCliente6ActionPerformed(evt);
+                btnSalvarCadastroVeiculoActionPerformed(evt);
             }
         });
 
-        btnSalvarCadastroCliente7.setText("Deletar");
+        btnDeletarVeiculo.setText("Deletar");
+        btnDeletarVeiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeletarVeiculoActionPerformed(evt);
+            }
+        });
 
-        btnSalvarCadastroCliente8.setText("Editar");
+        btnEditarVeiculo.setText("Editar");
 
         txtNomeClienteVeiculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Cliente"));
         txtNomeClienteVeiculo.addActionListener(new java.awt.event.ActionListener() {
@@ -267,11 +282,11 @@ public class Principal extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(btnSalvarCadastroCliente6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSalvarCadastroVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSalvarCadastroCliente7, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnDeletarVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSalvarCadastroCliente8, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnEditarVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
@@ -288,13 +303,13 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(jLabel13))
                 .addGap(21, 21, 21)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSalvarCadastroCliente6)
-                    .addComponent(btnSalvarCadastroCliente7)
-                    .addComponent(btnSalvarCadastroCliente8))
+                    .addComponent(btnSalvarCadastroVeiculo)
+                    .addComponent(btnDeletarVeiculo)
+                    .addComponent(btnEditarVeiculo))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tblCadastroVeiculos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -305,18 +320,18 @@ public class Principal extends javax.swing.JFrame {
                 "ID", "Placa", "Modelo", "Cor", "Nome Cliente"
             }
         ));
-        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblCadastroVeiculos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable3MouseClicked(evt);
+                tblCadastroVeiculosMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(jTable3);
-        if (jTable3.getColumnModel().getColumnCount() > 0) {
-            jTable3.getColumnModel().getColumn(0).setResizable(false);
-            jTable3.getColumnModel().getColumn(1).setResizable(false);
-            jTable3.getColumnModel().getColumn(2).setResizable(false);
-            jTable3.getColumnModel().getColumn(3).setResizable(false);
-            jTable3.getColumnModel().getColumn(4).setResizable(false);
+        jScrollPane3.setViewportView(tblCadastroVeiculos);
+        if (tblCadastroVeiculos.getColumnModel().getColumnCount() > 0) {
+            tblCadastroVeiculos.getColumnModel().getColumn(0).setResizable(false);
+            tblCadastroVeiculos.getColumnModel().getColumn(1).setResizable(false);
+            tblCadastroVeiculos.getColumnModel().getColumn(2).setResizable(false);
+            tblCadastroVeiculos.getColumnModel().getColumn(3).setResizable(false);
+            tblCadastroVeiculos.getColumnModel().getColumn(4).setResizable(false);
         }
 
         javax.swing.GroupLayout VeiculoLayout = new javax.swing.GroupLayout(Veiculo);
@@ -752,7 +767,49 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void btnSalvarCadastroCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarCadastroCliente1ActionPerformed
-        // TODO add your handling code here:
+// A variável 'linha' é definida pelo evento tblClientesPrincipalMouseClicked, 
+    // mas é mais seguro pegar diretamente de tblClientesPrincipal.
+    linha = tblClientesPrincipal.getSelectedRow(); 
+
+    // 1. Verifica se alguma linha foi selecionada (linha < 0 significa que nada foi clicado)
+    if (linha < 0) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Nenhum cliente selecionado. Por favor, selecione um cliente na tabela.",
+            "AVISO",
+            JOptionPane.WARNING_MESSAGE
+        );
+
+    } else {
+        // 2. Obtém o ID do cliente da coluna 0 da linha selecionada
+        int idCliente = (int) tblClientesPrincipal.getValueAt(linha, 0);
+
+        // 3. Pede confirmação antes de deletar
+        int confirmacao = JOptionPane.showConfirmDialog(this, 
+                "Tem certeza que deseja excluir o cliente ID: " + idCliente + "?", 
+                "Confirmação de Exclusão", JOptionPane.YES_NO_OPTION);
+
+        if (confirmacao == JOptionPane.YES_OPTION) {
+            try {
+                // 4. Chama o DAO para deletar
+                cDAO.deletar(idCliente);
+
+                // 5. Atualiza a tabela para refletir a exclusão
+                cc.atualizaTabela(tblClientesPrincipal);
+
+                // 6. Limpa os campos de texto do cadastro de cliente
+                limparCamposCliente(); // Você deve criar este método (veja abaixo)
+                
+                JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (RuntimeException e) {
+                // Trata a exceção de Foreign Key (se houver veículos vinculados)
+                JOptionPane.showMessageDialog(this, 
+                        "Erro ao excluir. O cliente possui veículos vinculados e não pode ser deletado.", 
+                        "Erro de Exclusão", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }        
     }//GEN-LAST:event_btnSalvarCadastroCliente1ActionPerformed
 
     private void btnSalvarCadastroCliente5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarCadastroCliente5ActionPerformed
@@ -796,24 +853,117 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtBuscarOperacaoActionPerformed
 
     private void btnSalvarCadastroClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarCadastroClienteActionPerformed
-        if(retornaCliente() != null){
-            cDAO.inserir(retornaCliente());
-        }
+        Cliente c = retornaCliente();
+    
+    if(c != null){
+        cDAO.inserir(c);
+        
+        // **********************************************
+        // 1. CHAMA O CONTROLLER PARA ATUALIZAR A TABELA
+        cc.atualizaTabela(tblClientesPrincipal);
+        
+        // 2. LIMPA OS CAMPOS APÓS A INSERÇÃO
+        limparCamposCliente();
+        // **********************************************
+        
+        JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
+    }
     }//GEN-LAST:event_btnSalvarCadastroClienteActionPerformed
 
-    private void btnSalvarCadastroCliente6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarCadastroCliente6ActionPerformed
-       if(retornaVeiculo() != null){
-           vDAO.inserir(retornaVeiculo());
-       }
-    }//GEN-LAST:event_btnSalvarCadastroCliente6ActionPerformed
+    private void btnSalvarCadastroVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarCadastroVeiculoActionPerformed
+Veiculo v = retornaVeiculo();
+    
+    if(v != null){
+        vDAO.inserir(v);
+        
+        // **********************************************
+        // 1. CHAMA O CONTROLLER PARA ATUALIZAR A TABELA DE VEÍCULOS
+        vc.atualizaTabela(tblCadastroVeiculos); // Use o nome correto da sua JTable de veículos
+        
+        // 2. LIMPA OS CAMPOS APÓS A INSERÇÃO
+        limparCamposVeiculo(); 
+        // **********************************************
+        
+        JOptionPane.showMessageDialog(this, "Veículo cadastrado com sucesso!");
+    }
+    }//GEN-LAST:event_btnSalvarCadastroVeiculoActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton7ActionPerformed
 
-    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
+    private void tblCadastroVeiculosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCadastroVeiculosMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTable3MouseClicked
+    }//GEN-LAST:event_tblCadastroVeiculosMouseClicked
+
+    private void tblClientesPrincipalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesPrincipalMouseClicked
+// 1. Armazena o índice da linha que foi clicada
+    linha = tblClientesPrincipal.getSelectedRow();
+
+    // 2. Verifica se uma linha válida foi selecionada
+    if (linha > -1) {
+        // 3. Obtém os valores da linha selecionada
+        int id = (int) tblClientesPrincipal.getValueAt(linha, 0);
+        String nome = tblClientesPrincipal.getValueAt(linha, 1).toString();
+        
+        // Cuidado! O valor da coluna 2 é o Email, não o Telefone.
+        String email = tblClientesPrincipal.getValueAt(linha, 2) != null ? tblClientesPrincipal.getValueAt(linha, 2).toString() : ""; 
+        String telefone = tblClientesPrincipal.getValueAt(linha, 3) != null ? tblClientesPrincipal.getValueAt(linha, 3).toString() : "";
+
+        // 4. Cria um objeto Cliente e o armazena na variável de instância (se for usar para edição/exclusão)
+        // Você pode não precisar desta linha se apenas for preencher os campos.
+        // Cliente c = new Cliente(id, nome, email, telefone); 
+        
+        // 5. Preenche os campos de texto na aba de Cadastro de Cliente
+        txtNomeClienteCadastro.setText(nome);
+        txtEmailClienteCadastro.setText(email);
+        
+        // Corrigindo: No seu método retornaCliente, você usou 'txtEmailClienteCadastro' duas vezes.
+        // O campo para telefone deve ser 'txtTelefoneClienteCadastro'.
+        txtTelefoneClienteCadastro.setText(telefone); 
+        }
+    }//GEN-LAST:event_tblClientesPrincipalMouseClicked
+
+    private void btnDeletarVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarVeiculoActionPerformed
+// Usando 'linhaVeiculo' como exemplo da variável que armazena a seleção
+    int linhaVeiculo = tblCadastroVeiculos.getSelectedRow(); 
+
+    if (linhaVeiculo < 0) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Nenhum veículo selecionado, por favor selecione na tabela",
+            "AVISO",
+            JOptionPane.WARNING_MESSAGE
+        );
+
+    } else {
+        // 1. Obtém o ID do veículo da coluna 0 (onde o ID deve estar)
+        int idVeiculo = (int) tblCadastroVeiculos.getValueAt(linhaVeiculo, 0);
+
+        int confirmacao = JOptionPane.showConfirmDialog(this, 
+                "Tem certeza que deseja excluir o veículo ID: " + idVeiculo + "?", 
+                "Confirmação", JOptionPane.YES_NO_OPTION);
+
+        if (confirmacao == JOptionPane.YES_OPTION) {
+            try {
+                // 2. Chama o DAO para deletar
+                vDAO.deletar(idVeiculo);
+                
+                // 3. ATUALIZA A TABELA e limpa os campos após o sucesso
+                vc.atualizaTabela(tblCadastroVeiculos); 
+                limparCamposVeiculo();
+
+                JOptionPane.showMessageDialog(this, "Veículo excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (RuntimeException e) {
+                // Trata a exceção lançada pelo DAO (geralmente por Foreign Key)
+                JOptionPane.showMessageDialog(this, 
+                        "Erro ao excluir. O veículo pode estar em uso.", 
+                        "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }      
+    }//GEN-LAST:event_btnDeletarVeiculoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -857,16 +1007,16 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel Vagas;
     private javax.swing.JPanel Veiculo;
     private javax.swing.JButton btnBuscarOp;
+    private javax.swing.JButton btnDeletarVeiculo;
+    private javax.swing.JButton btnEditarVeiculo;
     private javax.swing.JButton btnFinalizarOp;
     private javax.swing.JButton btnSalvarCadastroCliente;
     private javax.swing.JButton btnSalvarCadastroCliente1;
     private javax.swing.JButton btnSalvarCadastroCliente10;
     private javax.swing.JButton btnSalvarCadastroCliente11;
     private javax.swing.JButton btnSalvarCadastroCliente5;
-    private javax.swing.JButton btnSalvarCadastroCliente6;
-    private javax.swing.JButton btnSalvarCadastroCliente7;
-    private javax.swing.JButton btnSalvarCadastroCliente8;
     private javax.swing.JButton btnSalvarCadastroCliente9;
+    private javax.swing.JButton btnSalvarCadastroVeiculo;
     private javax.swing.JComboBox<String> cbxVagas;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
@@ -896,11 +1046,11 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JTable jTable5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JLabel lblBuscarVeiculo;
+    private javax.swing.JTable tblCadastroVeiculos;
     private javax.swing.JTable tblClientesPrincipal;
     private javax.swing.JTextField txtBuscarOperacao;
     private javax.swing.JTextField txtCorOp;
@@ -918,7 +1068,7 @@ public class Principal extends javax.swing.JFrame {
 private Cliente retornaCliente(){
         String nome = txtNomeClienteCadastro.getText();
         String email = txtEmailClienteCadastro.getText();
-        String telefone = txtEmailClienteCadastro.getText();
+        String telefone = txtTelefoneClienteCadastro.getText();
         
         Cliente c = new Cliente();
         c.setNome(nome);
@@ -957,5 +1107,21 @@ public void preencherVeiculo(Veiculo v){
         txtCorOp.setText(v.getCor());
         txtNomeClienteOp.setText(v.getCliente().getNome());
     }
+public void limparCamposCliente() {
+    txtNomeClienteCadastro.setText("");
+    txtEmailClienteCadastro.setText("");
+    txtTelefoneClienteCadastro.setText("");
 
+    linha = -1;
+    }
+public void limparCamposVeiculo() {
+    // Limpa os campos de texto na aba de Cadastro de Veículo
+    txtPlacaVeiculoCadastro.setText("");
+    txtModeloVeiculoCadastro.setText("");
+    txtCorVeiculoCadastro.setText("");
+    txtNomeClienteVeiculo.setText(""); 
+
+    this.clienteSelecionado = null; 
+
+    }
 }
