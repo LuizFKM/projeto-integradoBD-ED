@@ -5,6 +5,7 @@
 package com.luizfrancisco.estacionamento.view;
 
 import com.luizfrancisco.estacionamento.controller.ClienteController;
+import com.luizfrancisco.estacionamento.controller.VagaController;
 import com.luizfrancisco.estacionamento.controller.VeiculoController;
 import com.luizfrancisco.estacionamento.dao.ClienteDAO;
 import com.luizfrancisco.estacionamento.dao.VeiculoDAO;
@@ -23,6 +24,7 @@ public class Principal extends javax.swing.JFrame {
     private final ClienteController cc = new ClienteController();
     private int linhaSelecionada = -1;
     private final VeiculoController vc = new VeiculoController();
+    private final VagaController vgc = new VagaController();
     
     private int linha = -1;
     
@@ -30,6 +32,7 @@ public class Principal extends javax.swing.JFrame {
         initComponents();
         cc.atualizaTabela(tblClientesPrincipal);
         vc.atualizaTabela(tblCadastroVeiculos);
+        vgc.atualizaTabela(tblVagas);
         setLocationRelativeTo(null);
         setResizable(false);
     }
@@ -92,7 +95,7 @@ public class Principal extends javax.swing.JFrame {
         jTable5 = new javax.swing.JTable();
         Vagas = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tblVagas = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
         jTextField8 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -535,16 +538,27 @@ public class Principal extends javax.swing.JFrame {
 
         jTable5.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "Vaga", "Placa Veiculo", "Entrada", "Saida", "Valor total"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane5.setViewportView(jTable5);
+        if (jTable5.getColumnModel().getColumnCount() > 0) {
+            jTable5.getColumnModel().getColumn(1).setResizable(false);
+        }
 
         javax.swing.GroupLayout OperacionalLayout = new javax.swing.GroupLayout(Operacional);
         Operacional.setLayout(OperacionalLayout);
@@ -566,7 +580,7 @@ public class Principal extends javax.swing.JFrame {
 
         Principal.addTab("Operacional", Operacional);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tblVagas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -585,7 +599,7 @@ public class Principal extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tblVagas);
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1045,13 +1059,13 @@ Veiculo v = retornaVeiculo();
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JLabel lblBuscarVeiculo;
     private javax.swing.JTable tblCadastroVeiculos;
     private javax.swing.JTable tblClientesPrincipal;
+    private javax.swing.JTable tblVagas;
     private javax.swing.JTextField txtBuscarOperacao;
     private javax.swing.JTextField txtCorOp;
     private javax.swing.JTextField txtCorVeiculoCadastro;
