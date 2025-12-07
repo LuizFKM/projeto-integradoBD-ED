@@ -21,7 +21,7 @@ import com.luizfrancisco.estacionamento.model.Vaga;
 public class OperacaoDAO {
     
     public void inserirEntrada(Operacao o){
-        String sql = "INSERT INTO operacao (horario_entrada, id_veiculo, id_vaga)"
+        String sql = "INSERT INTO operacao (horario_entrada, id_veiculo, id_vaga, valor_hora)"
                 + "VALUES (?, ?, ?)";
         
         try(Connection con = Conexao.getConnection();
@@ -30,6 +30,7 @@ public class OperacaoDAO {
                     ps.setTimestamp(1, Timestamp.valueOf(o.getHorarioEntrada()));
                     ps.setInt(2, o.getVeiculo().getId());
                     ps.setInt(3, o.getVaga().getId());
+                    ps.setDouble(4, o.getValorHora());
                     ps.executeUpdate();
             
         

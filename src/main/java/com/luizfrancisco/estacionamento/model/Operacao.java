@@ -14,21 +14,25 @@ public class Operacao {
     private int id_operacao;
     private LocalDateTime horarioEntrada;
     private LocalDateTime horarioSaida;
+    private double valorHora;
     private double valorTotal;
     private Veiculo veiculo;
     private Vaga vaga;
 
     public Operacao() {
     }
-
-    public Operacao(int id_operacao, LocalDateTime horarioEntrada, LocalDateTime horarioSaida, double valorTotal, Veiculo veiculo, Vaga vaga) {
+    
+ public Operacao(int id_operacao, LocalDateTime horarioEntrada, LocalDateTime horarioSaida, double valorHora, double valorTotal, Veiculo veiculo, Vaga vaga) {
         this.id_operacao = id_operacao;
         this.horarioEntrada = horarioEntrada;
         this.horarioSaida = horarioSaida;
+        this.valorHora = valorHora;
         this.valorTotal = valorTotal;
         this.veiculo = veiculo;
         this.vaga = vaga;
     }
+
+    
 
     public int getId_operacao() {
         return id_operacao;
@@ -53,6 +57,16 @@ public class Operacao {
     public void setHorarioSaida(LocalDateTime horarioSaida) {
         this.horarioSaida = horarioSaida;
     }
+
+    public double getValorHora() {
+        return valorHora;
+    }
+
+    public void setValorHora(double valorHora) {
+        this.valorHora = valorHora;
+    }
+    
+    
 
     public double getValorTotal() {
         return valorTotal;
@@ -80,8 +94,8 @@ public class Operacao {
 
     @Override
     public String toString() {
-        return "Operacao{" + "id_operacao=" + id_operacao + ", horarioEntrada=" + horarioEntrada + ", horarioSaida=" + horarioSaida + ", valorTotal=" + valorTotal + ", veiculo=" + veiculo + ", vaga=" + vaga + '}';
+        return "Operacao{" + "id_operacao=" + id_operacao + ", horarioEntrada=" + horarioEntrada + ", horarioSaida=" + horarioSaida + ", valorHora=" + valorHora + ", valorTotal=" + valorTotal + ", veiculo=" + veiculo + ", vaga=" + vaga + '}';
     }
-    
+
     
 }

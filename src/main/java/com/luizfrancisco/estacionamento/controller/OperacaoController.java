@@ -27,7 +27,8 @@ public class OperacaoController {
                 o.getVeiculo().getPlaca(),
                 o.getHorarioEntrada(),
                 o.getHorarioSaida(),
-                o.getValorTotal()
+                o.getValorTotal(),
+                o.getValorHora()
             });
         }
     

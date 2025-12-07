@@ -68,6 +68,7 @@ public List<Veiculo> listarVeiculo() {
 
     } catch (SQLException e) {
         System.out.println("Erro ao listar veículo: " + e);
+        e.printStackTrace();
     } 
     return listaVeiculos;
 }
