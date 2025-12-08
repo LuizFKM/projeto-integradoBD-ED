@@ -14,7 +14,11 @@ import com.luizfrancisco.estacionamento.model.Vaga;
  * @author luizfkm
  */
 public class VagaController {
-    private VagaDAO dao = new VagaDAO();
+    private VagaDAO dao;
+    
+    public VagaController(){
+        this.dao = new VagaDAO();
+    }
     
     public void atualizaTabela(JTable tabela){
         DefaultTableModel model = (DefaultTableModel) tabela.getModel();
@@ -22,8 +26,11 @@ public class VagaController {
         model.setNumRows(0);
         
         for(Vaga v : dao.listarVagas()){
-            v.getId();
-            v.isStatus();
+            model.addRow(new Object[]{
+            v.getId(),
+            v.isStatus()
+        }); 
+        
         }
     }
     
