@@ -17,6 +17,9 @@ import com.luizfrancisco.estacionamento.model.Operacao;
 import com.luizfrancisco.estacionamento.model.Veiculo;
 import com.luizfrancisco.estacionamento.model.Vaga;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 /**
  *
@@ -41,10 +44,11 @@ public class Principal extends javax.swing.JFrame {
     
     public Principal() {
         initComponents();
+        txtValorHora.setText("R$ 0,00");
         cc.atualizaTabela(tblClientesPrincipal);
         vc.atualizaTabela(tblCadastroVeiculos);
         vgc.atualizaTabela(tblVagas);
-        oc.atualizaTabela(operacaoTable);
+        oc.atualizaTabela(tblOperacao);
         preencheCbxVaga();
         setLocationRelativeTo(null);
         setResizable(false);
@@ -107,10 +111,10 @@ public class Principal extends javax.swing.JFrame {
         txtBuscarOperacao = new javax.swing.JTextField();
         btnBuscarOp = new javax.swing.JButton();
         cbxVagas = new javax.swing.JComboBox<>();
-        ftdPrecoHora = new javax.swing.JFormattedTextField();
         jToggleButton1 = new javax.swing.JToggleButton();
+        txtValorHora = new javax.swing.JTextField();
         jScrollPane5 = new javax.swing.JScrollPane();
-        operacaoTable = new javax.swing.JTable();
+        tblOperacao = new javax.swing.JTable();
         Vagas = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblVagas = new javax.swing.JTable();
@@ -515,12 +519,11 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        ftdPrecoHora.setBorder(javax.swing.BorderFactory.createTitledBorder("Preço/Hora"));
-        ftdPrecoHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("¤¤#,##0.00"))));
-
         jToggleButton1.setBackground(new java.awt.Color(255, 255, 250));
         jToggleButton1.setText("Imprimir relatório");
         jToggleButton1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        txtValorHora.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder("txtValorHora")));
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -550,17 +553,17 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNomeClienteOp, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addComponent(cbxVagas, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(ftdPrecoHora, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblBuscarVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel13Layout.createSequentialGroup()
                                 .addComponent(txtPlacaOp, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtModeloOp, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(txtCorOp, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(txtCorOp, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel13Layout.createSequentialGroup()
+                                .addComponent(cbxVagas, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtValorHora, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblBuscarVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -575,12 +578,11 @@ public class Principal extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addComponent(txtNomeClienteOp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxVagas)
-                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ftdPrecoHora)
-                        .addComponent(lblBuscarVeiculo)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cbxVagas, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblBuscarVeiculo)
+                    .addComponent(txtValorHora, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -596,7 +598,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        operacaoTable.setModel(new javax.swing.table.DefaultTableModel(
+        tblOperacao.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -615,9 +617,9 @@ public class Principal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane5.setViewportView(operacaoTable);
-        if (operacaoTable.getColumnModel().getColumnCount() > 0) {
-            operacaoTable.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane5.setViewportView(tblOperacao);
+        if (tblOperacao.getColumnModel().getColumnCount() > 0) {
+            tblOperacao.getColumnModel().getColumn(1).setResizable(false);
         }
 
         javax.swing.GroupLayout OperacionalLayout = new javax.swing.GroupLayout(Operacional);
@@ -854,7 +856,15 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNomeClienteOpActionPerformed
 
     private void btnFinalizarOpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarOpActionPerformed
-        // TODO add your handling code here:
+        linhaSelecionada = tblOperacao.getSelectedRow();
+        if(linhaSelecionada != -1 ){
+           int id = (int) tblOperacao.getValueAt(linhaSelecionada, 0);
+           oc.checkout(id);
+           
+           oc.atualizaTabela(tblOperacao);
+           vgc.atualizaTabela(tblVagas);
+           JOptionPane.showMessageDialog(this, "Operação finalizada!");
+        }
     }//GEN-LAST:event_btnFinalizarOpActionPerformed
 
     private void txtBuscarOperacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarOperacaoActionPerformed
@@ -985,7 +995,8 @@ public class Principal extends javax.swing.JFrame {
             Operacao op = retornaOperacao();
             op.setVaga(vagaDoCombo);
             oDAO.inserirEntrada(op);
-            oc.atualizaTabela(operacaoTable);
+            oc.atualizaTabela(tblOperacao);
+            vgc.atualizaTabela(tblVagas);
             JOptionPane.showMessageDialog(this, "Entrada registrada com sucesso!");
             
         }catch (Exception e){
@@ -1060,7 +1071,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton btnSalvarCadastroOperacao;
     private javax.swing.JButton btnSalvarCadastroVeiculo;
     private javax.swing.JComboBox<Vaga> cbxVagas;
-    private javax.swing.JFormattedTextField ftdPrecoHora;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1085,9 +1095,9 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField8;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JLabel lblBuscarVeiculo;
-    private javax.swing.JTable operacaoTable;
     private javax.swing.JTable tblCadastroVeiculos;
     private javax.swing.JTable tblClientesPrincipal;
+    private javax.swing.JTable tblOperacao;
     private javax.swing.JTable tblVagas;
     private javax.swing.JTextField txtBuscarCliente;
     private javax.swing.JTextField txtBuscarOperacao;
@@ -1103,6 +1113,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField txtPlacaOp;
     private javax.swing.JTextField txtPlacaVeiculoCadastro;
     private javax.swing.JTextField txtTelefoneClienteCadastro;
+    private javax.swing.JTextField txtValorHora;
     // End of variables declaration//GEN-END:variables
 private Cliente retornaCliente(){
         String nome = txtNomeClienteCadastro.getText();
@@ -1136,13 +1147,13 @@ private Veiculo retornaVeiculo(){
     }
 
 private Operacao retornaOperacao(){
-    
+    double precoHora = Double.parseDouble(txtValorHora.getText());
     Operacao op = new Operacao();
     op.setHorarioEntrada(LocalDateTime.now());
     op.setVeiculo(veiculoSelecionado);
+    op.setValorHora(precoHora);
     
     
-    op.setValorTotal(0.0);
     
     return op;
 }

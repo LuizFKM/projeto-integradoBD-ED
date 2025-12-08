@@ -40,12 +40,12 @@ public class OperacaoDAO {
     }
     
     public void inserirSaida(Operacao o){
-        String sql = "UPDATE operacao SET horario_saida = ?, valor_total = ?, WHERE id_operacao = ?";
+        String sql = "UPDATE operacao SET horario_saida = ?, valor_total = ? WHERE id_operacao = ?";
         
         try(Connection con = Conexao.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql);
                 ){
-                    ps.setTimestamp(1, Timestamp.valueOf(o.getHorarioEntrada()));
+                    ps.setTimestamp(1, Timestamp.valueOf(o.getHorarioSaida()));
                     ps.setDouble(2, o.getValorTotal());
                     ps.setInt(3, o.getId_operacao());
                     ps.executeUpdate();
@@ -117,4 +117,25 @@ public class OperacaoDAO {
         
         return lista;
     } 
+    
+    public Operacao buscarPorId(int id) {
+    String sql = "SELECT * FROM operacao WHERE id_operacao = ?";
+    Operacao op = new Operacao();
+    
+    try (Connection con = Conexao.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        
+        if (rs.next()) {
+            op.setId_operacao(rs.getInt("id_operacao"));
+            op.setHorarioEntrada(rs.getTimestamp("horario_entrada").toLocalDateTime());
+            op.setValorHora(rs.getDouble("valor_hora"));
+        }
+    } catch (SQLException e) {
+        System.out.println("Erro ao buscar operacao: " + e);
+    }
+    return op;
+}
 }
