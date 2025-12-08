@@ -6,6 +6,7 @@ package com.luizfrancisco.estacionamento.controller;
 
 import com.luizfrancisco.estacionamento.dao.ClienteDAO;
 import com.luizfrancisco.estacionamento.model.Cliente;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,20 +20,15 @@ public class ClienteController {
     public ClienteController(){
         this.dao = new ClienteDAO();
     }
-    public void atualizaTabela(JTable tabela){
-        DefaultTableModel model = (DefaultTableModel) tabela.getModel();
+    
+    
+    public List<Cliente> filtrarClientes(String busca){
+        String buscaTermo = busca.trim();
         
-        model.setNumRows(0);
-        
-        
-        
-        for (Cliente c : dao.listar()){
-            model.addRow(new Object[]{
-                c.getId(),
-                c.getNome(),
-                c.getEmail(),
-                c.getTelefone(),
-            });
+        if(buscaTermo.isEmpty()){
+            return dao.listar();
+        }else {
+            return dao.buscar(buscaTermo);
         }
     }
 }

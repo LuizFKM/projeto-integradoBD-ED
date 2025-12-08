@@ -5,14 +5,18 @@
 package com.luizfrancisco.estacionamento.view;
 
 import com.luizfrancisco.estacionamento.controller.ClienteController;
+import com.luizfrancisco.estacionamento.dao.ClienteDAO;
 import com.luizfrancisco.estacionamento.model.Cliente;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
 
 /**
  *
  * @author luizfkm
  */
 public class BuscarClientes extends javax.swing.JFrame {
-
+    private static final ClienteDAO cDAO = new ClienteDAO();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(BuscarClientes.class.getName());
     private Principal origem;
     private final ClienteController cc = new ClienteController();
@@ -27,7 +31,7 @@ public class BuscarClientes extends javax.swing.JFrame {
 
     public BuscarClientes(Principal origem) {
         initComponents();
-        cc.atualizaTabela(tblBuscarClientes);
+        atualizarTabela("");
         this.origem = origem;
     }
 
@@ -41,7 +45,7 @@ public class BuscarClientes extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        txtPesquisarCliente = new javax.swing.JTextField();
         btnSelecionar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBuscarClientes = new javax.swing.JTable();
@@ -51,10 +55,15 @@ public class BuscarClientes extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Digite o nome ou código"));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtPesquisarCliente.setBorder(javax.swing.BorderFactory.createTitledBorder("Digite o nome ou código"));
+        txtPesquisarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtPesquisarClienteActionPerformed(evt);
+            }
+        });
+        txtPesquisarCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPesquisarClienteKeyPressed(evt);
             }
         });
 
@@ -108,7 +117,7 @@ public class BuscarClientes extends javax.swing.JFrame {
                         .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnSelecionar))
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPesquisarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 926, Short.MAX_VALUE)
         );
@@ -116,7 +125,7 @@ public class BuscarClientes extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(41, 41, 41)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPesquisarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSelecionar)
@@ -139,9 +148,10 @@ public class BuscarClientes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    private void txtPesquisarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesquisarClienteActionPerformed
+        String buscar = txtPesquisarCliente.getText();
+        atualizarTabela(buscar);
+    }//GEN-LAST:event_txtPesquisarClienteActionPerformed
 
     private void btnSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarActionPerformed
         linhaSelecionada = tblBuscarClientes.getSelectedRow();
@@ -175,8 +185,26 @@ public class BuscarClientes extends javax.swing.JFrame {
     }//GEN-LAST:event_tblBuscarClientesMouseClicked
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
+        String buscar = txtPesquisarCliente.getText();
+        atualizarTabela(buscar);
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void txtPesquisarClienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisarClienteKeyPressed
+    String buscar = txtPesquisarCliente.getText();
+
+        DefaultTableModel model = (DefaultTableModel) tblBuscarClientes.getModel();
+        model.setNumRows(0);
+
+        // 4. Preenche a tabela com a lista resultante (filtrada ou completa)
+        for (Cliente c : cDAO.buscar(buscar)){
+            model.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getEmail(),
+                c.getTelefone(),
+            });
+        }       
+    }//GEN-LAST:event_txtPesquisarClienteKeyPressed
 
     /**
      * @param args the command line arguments
@@ -208,7 +236,27 @@ public class BuscarClientes extends javax.swing.JFrame {
     private javax.swing.JButton btnSelecionar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblBuscarClientes;
+    private javax.swing.JTextField txtPesquisarCliente;
     // End of variables declaration//GEN-END:variables
+
+private void atualizarTabela(String busca) {
+        DefaultTableModel model = (DefaultTableModel) tblBuscarClientes.getModel();
+        model.setNumRows(0); 
+
+        List<Cliente> clientes = cc.filtrarClientes(busca);
+        
+       
+        for (Cliente c : clientes) {
+            model.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getEmail(),
+                c.getTelefone()
+            });
+        }
 }
+
+}
+
+

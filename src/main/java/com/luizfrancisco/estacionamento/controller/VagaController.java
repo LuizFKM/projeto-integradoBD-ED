@@ -8,6 +8,7 @@ import com.luizfrancisco.estacionamento.dao.VagaDAO;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import com.luizfrancisco.estacionamento.model.Vaga;
+import java.util.List;
 
 /**
  *
@@ -20,18 +21,11 @@ public class VagaController {
         this.dao = new VagaDAO();
     }
     
-    public void atualizaTabela(JTable tabela){
-        DefaultTableModel model = (DefaultTableModel) tabela.getModel();
+    
+    public List<Vaga> filtrarVagas(String buscaId, String filtroStatus){
+        String termo = (buscaId != null) ? buscaId.trim() : "";
         
-        model.setNumRows(0);
-        
-        for(Vaga v : dao.listarVagas()){
-            model.addRow(new Object[]{
-            v.getId(),
-            v.isStatus()
-        }); 
-        
-        }
+        return dao.buscar(termo, filtroStatus);
     }
     
     

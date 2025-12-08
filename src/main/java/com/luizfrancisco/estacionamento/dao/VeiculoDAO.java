@@ -93,4 +93,53 @@ public void deletar(int id) {
         throw new RuntimeException("Erro ao deletar veículo. Verifique se existem operações vinculadas.", e);
     }
 }
+public List<Veiculo> buscar(String termoBusca) {
+        List<Veiculo> listaVeiculos = new ArrayList<>();
+        
+        // QUERY ATUALIZADA: Busca por ID, Placa, Modelo, Cor e Nome do Cliente.
+        String sql = """
+                     SELECT v.id_veiculo, v.modelo, v.cor, v.placa, c.id_cliente, c.nome, c.email
+                     FROM veiculo AS v INNER JOIN cliente AS c ON v.id_cliente = c.id_cliente
+                     WHERE CAST(v.id_veiculo AS CHAR) LIKE ?         
+                     OR LOWER(v.placa) LIKE LOWER(?)         
+                     OR LOWER(v.modelo) LIKE LOWER(?)        
+                     OR LOWER(v.cor) LIKE LOWER(?)           
+                     OR LOWER(c.nome) LIKE LOWER(?)
+                     """;
+
+        try (java.sql.Connection con = com.luizfrancisco.estacionamento.database.Conexao.getConnection();
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+
+            String param = "%" + termoBusca + "%";
+            
+            // Define 5 parâmetros de busca com o termo digitado
+            ps.setString(1, param); // 1. ID do Veículo
+            ps.setString(2, param); // 2. Placa
+            ps.setString(3, param); // 3. Modelo
+            ps.setString(4, param); // 4. Cor
+            ps.setString(5, param); // 5. Nome do Cliente
+
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    com.luizfrancisco.estacionamento.model.Veiculo v = new com.luizfrancisco.estacionamento.model.Veiculo();
+                    v.setId(rs.getInt("id_veiculo"));
+                    v.setModelo(rs.getString("modelo"));
+                    v.setCor(rs.getString("cor"));
+                    v.setPlaca(rs.getString("placa"));
+
+                    com.luizfrancisco.estacionamento.model.Cliente c = new com.luizfrancisco.estacionamento.model.Cliente();
+                    c.setId(rs.getInt("id_cliente"));
+                    c.setNome(rs.getString("nome"));
+                    c.setEmail(rs.getString("email"));
+                    
+                    v.setCliente(c);
+                    listaVeiculos.add(v);
+                }
+            }
+
+        } catch (java.sql.SQLException e) {
+            System.out.println("Erro ao buscar veículo: " + e);
+        }
+        return listaVeiculos;
+    }
 }

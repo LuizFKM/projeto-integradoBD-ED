@@ -4,11 +4,10 @@
  */
 package com.luizfrancisco.estacionamento.controller;
 import com.luizfrancisco.estacionamento.dao.OperacaoDAO;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import com.luizfrancisco.estacionamento.model.Operacao;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
+import java.util.List;
 
 /**
  *
@@ -16,39 +15,17 @@ import java.time.format.DateTimeFormatter;
  */
 public class OperacaoController {
     private OperacaoDAO dao = new OperacaoDAO();
-    
-    public void atualizaTabela(JTable tabela){
-        DefaultTableModel model = (DefaultTableModel) tabela.getModel();
-        
-        model.setNumRows(0);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-        for(Operacao o : dao.listarOperacao()){
-        
-           String entradaFormatada = "";
-           String saidaFormatada = "";
-           if(o.getHorarioEntrada() != null){
-               entradaFormatada = o.getHorarioEntrada().format(dtf);
-           }
-           
-           if(o.getHorarioSaida() == null){
-               saidaFormatada = "Em andamento.";
-           }else{
-               saidaFormatada = o.getHorarioSaida().format(dtf);
-           }
 
-            model.addRow(new Object[]{
-                o.getId_operacao(),
-                o.getVaga().getId(),
-                o.getVeiculo().getPlaca(),
-                entradaFormatada,
-                saidaFormatada,
-                o.getValorTotal(),
-                o.getValorHora()
-            });
+    public List<Operacao> filtrarOperacoes(String busca){
+        String buscaTermo = busca.trim();
+        
+        if(buscaTermo.isEmpty()){
+            return dao.listarOperacao();
+        }else {
+            return dao.buscar(buscaTermo);
         }
-    
     }
-    
+
     public void checkout(int idOperacao){
         Operacao op = dao.buscarPorId(idOperacao);
         System.out.println(op.getValorHora());
@@ -57,6 +34,8 @@ public class OperacaoController {
         dao.inserirSaida(op);
         
     }
+    
+    
     
     
 }

@@ -6,9 +6,10 @@ package com.luizfrancisco.estacionamento.view;
 
 import com.luizfrancisco.estacionamento.controller.ClienteController;
 import com.luizfrancisco.estacionamento.controller.VeiculoController;
+import com.luizfrancisco.estacionamento.dao.VeiculoDAO;
 import com.luizfrancisco.estacionamento.model.Veiculo;
 import com.luizfrancisco.estacionamento.model.Cliente;
-
+import java.util.List;
 /**
  *
  * @author npc12
@@ -27,7 +28,7 @@ public class BuscarVeiculo extends javax.swing.JFrame {
     
     public BuscarVeiculo(Principal origem) {
         initComponents();
-        vc.atualizaTabela(tblBuscarVeiculos);
+        atualizarTabela("");
         this.origem = origem;
     }
 
@@ -41,7 +42,7 @@ public class BuscarVeiculo extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        txtPesquisaVeiculo = new javax.swing.JTextField();
         btnBuscarVeiculo = new javax.swing.JButton();
         btnSelecionarVeiculo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -52,14 +53,24 @@ public class BuscarVeiculo extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(910, 543));
 
-        jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Digite a Placa ou Código"));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtPesquisaVeiculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Digite a Placa ou Código"));
+        txtPesquisaVeiculo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                txtPesquisaVeiculoActionPerformed(evt);
+            }
+        });
+        txtPesquisaVeiculo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPesquisaVeiculoKeyPressed(evt);
             }
         });
 
         btnBuscarVeiculo.setText("Buscar");
+        btnBuscarVeiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarVeiculoActionPerformed(evt);
+            }
+        });
 
         btnSelecionarVeiculo.setText("Selecionar");
         btnSelecionarVeiculo.addActionListener(new java.awt.event.ActionListener() {
@@ -88,7 +99,7 @@ public class BuscarVeiculo extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtPesquisaVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btnBuscarVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -102,7 +113,7 @@ public class BuscarVeiculo extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(41, 41, 41)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPesquisaVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBuscarVeiculo)
@@ -125,9 +136,9 @@ public class BuscarVeiculo extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void txtPesquisaVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPesquisaVeiculoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_txtPesquisaVeiculoActionPerformed
 
     private void btnSelecionarVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarVeiculoActionPerformed
         linhaSelecionada = tblBuscarVeiculos.getSelectedRow();
@@ -163,6 +174,18 @@ public class BuscarVeiculo extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "Por favor, selecione um cliente na tabela.");
         }
     }//GEN-LAST:event_btnSelecionarVeiculoActionPerformed
+
+    private void txtPesquisaVeiculoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPesquisaVeiculoKeyPressed
+        String buscar = txtPesquisaVeiculo.getText();
+        // A cada tecla solta, a tabela é atualizada automaticamente
+        atualizarTabela(buscar);
+    }//GEN-LAST:event_txtPesquisaVeiculoKeyPressed
+
+    private void btnBuscarVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarVeiculoActionPerformed
+    String buscar = txtPesquisaVeiculo.getText();
+        // Chama a mesma lógica da busca instantânea
+        atualizarTabela(buscar);
+    }//GEN-LAST:event_btnBuscarVeiculoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -204,7 +227,23 @@ public class BuscarVeiculo extends javax.swing.JFrame {
     private javax.swing.JButton btnSelecionarVeiculo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblBuscarVeiculos;
+    private javax.swing.JTextField txtPesquisaVeiculo;
     // End of variables declaration//GEN-END:variables
+private void atualizarTabela(String busca) {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblBuscarVeiculos.getModel();
+        model.setRowCount(0);
+
+        List<Veiculo> veiculos = vc.filtrarVeiculos(busca);
+       
+        for (Veiculo v : veiculos) {
+            model.addRow(new Object[]{
+                v.getId(),
+                v.getPlaca(),
+                v.getModelo(),
+                v.getCor(),
+                v.getCliente().getNome() 
+            });
+        }
+    }
 }

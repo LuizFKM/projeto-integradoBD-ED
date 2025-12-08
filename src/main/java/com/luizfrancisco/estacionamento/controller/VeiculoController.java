@@ -5,6 +5,7 @@
 package com.luizfrancisco.estacionamento.controller;
 import com.luizfrancisco.estacionamento.dao.VeiculoDAO;
 import com.luizfrancisco.estacionamento.model.Veiculo;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,22 +21,14 @@ public class VeiculoController {
     public VeiculoController(){
         this.dao = new VeiculoDAO();
     }
-    
-    public void atualizaTabela(JTable tabelaVeiculos){
-        DefaultTableModel model = (DefaultTableModel) tabelaVeiculos.getModel();
+
+    public List<Veiculo> filtrarVeiculos(String busca){
+        String buscaTermo = busca.trim();
         
-        model.setNumRows(0);
-        
-        for (Veiculo v : dao.listarVeiculo()) {
-            model.addRow(new Object[]{
-                v.getId(),
-                v.getPlaca(),
-                v.getModelo(),
-                v.getCor(),
-                v.getCliente().getNome(),
-                v.getCliente().getEmail(),
-                
-            });
+        if(buscaTermo.isEmpty()){
+            return dao.listarVeiculo();
+        }else {
+            return dao.buscar(buscaTermo);
         }
     }
 }

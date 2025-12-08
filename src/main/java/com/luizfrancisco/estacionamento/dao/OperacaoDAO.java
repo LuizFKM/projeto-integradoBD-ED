@@ -106,7 +106,7 @@ public class OperacaoDAO {
                 vaga.setStatus(rs.getBoolean("status_vaga"));
     
     
-                operacao.setVaga(vaga); // Associa a vaga à operação
+                operacao.setVaga(vaga);
                 lista.add(operacao);
             }
         
@@ -138,4 +138,62 @@ public class OperacaoDAO {
     }
     return op;
 }
+
+public List<Operacao> buscar(String termoBusca) {
+        List<Operacao> lista = new ArrayList<>();
+        
+      
+        String sql = """
+                     SELECT o.id_operacao, o.horario_entrada, o.horario_saida, o.valor_total, v.placa, v.modelo, vg.id_vaga, vg.status AS status_vaga 
+                     FROM operacao AS o 
+                     INNER JOIN veiculo AS v ON o.id_veiculo = v.id_veiculo 
+                     INNER JOIN vaga AS vg ON o.id_vaga = vg.id_vaga
+                     WHERE CAST(o.id_operacao AS CHAR) LIKE ?
+                     OR LOWER(v.placa) LIKE LOWER(?)
+                     OR CAST(vg.id_vaga AS CHAR) LIKE ?
+                     ORDER BY o.id_operacao DESC
+                     """;
+
+        try (java.sql.Connection con = com.luizfrancisco.estacionamento.database.Conexao.getConnection(); 
+             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+
+      
+            ps.setString(1, "%" + termoBusca + "%"); 
+            ps.setString(2, "%" + termoBusca + "%"); 
+            ps.setString(3, "%" + termoBusca + "%"); 
+
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Operacao operacao = new Operacao();
+                    operacao.setId_operacao(rs.getInt("id_operacao"));
+                    operacao.setHorarioEntrada(rs.getTimestamp("horario_entrada").toLocalDateTime());
+
+                    java.sql.Timestamp tsSaida = rs.getTimestamp("horario_saida");
+                    if (tsSaida != null) {
+                        operacao.setHorarioSaida(tsSaida.toLocalDateTime());
+                        operacao.setValorTotal(rs.getDouble("valor_total"));
+                    } else {
+                        operacao.setHorarioSaida(null);
+                        operacao.setValorTotal(0.0);
+                    }
+
+                    Veiculo veiculo = new Veiculo();
+                    veiculo.setPlaca(rs.getString("placa"));
+                    veiculo.setModelo(rs.getString("modelo"));
+                    operacao.setVeiculo(veiculo);
+
+                    Vaga vaga = new Vaga();
+                    vaga.setId(rs.getInt("id_vaga"));
+                    vaga.setStatus(rs.getBoolean("status_vaga"));
+                    operacao.setVaga(vaga);
+
+                    lista.add(operacao);
+                }
+            }
+        } catch (java.sql.SQLException e) {
+            System.out.println("Erro ao buscar operação: " + e);
+        }
+        return lista;
+    }
+
 }

@@ -43,5 +43,41 @@ public class VagaDAO {
     } 
     return listaVagas;
 }
+    public List<Vaga> buscar(String termoId, String filtroStatus) {
+        List<Vaga> listaVagas = new ArrayList<>();
+        
+        String sql = "SELECT * FROM vaga WHERE CAST(id_vaga AS CHAR) LIKE ?";
+        
+        if(!filtroStatus.equals("TODAS")){
+         sql += " AND status = ? ";
+        }
+        
+        sql += " ORDER BY id_vaga ASC";
+
+        try (Connection con = Conexao.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + termoId + "%");
+            
+            if(!filtroStatus.equals("TODAS")){
+                boolean isOcupada = filtroStatus.equals("OCUPADA");
+                ps.setBoolean(2, isOcupada);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Vaga v = new Vaga();
+                    v.setId(rs.getInt("id_vaga"));
+                    v.setStatus(rs.getBoolean("status"));
+                    listaVagas.add(v);
+                }
+            }
+        } catch (java.sql.SQLException e) {
+            System.out.println("Erro ao buscar vaga: " + e);
+        }
+        return listaVagas;
+    }
+    
+   
     
 }
