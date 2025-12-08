@@ -7,6 +7,7 @@ import com.luizfrancisco.estacionamento.dao.OperacaoDAO;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import com.luizfrancisco.estacionamento.model.Operacao;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -14,14 +15,14 @@ import java.time.format.DateTimeFormatter;
  * @author luizfkm
  */
 public class OperacaoController {
-    private OperacaoDAO od = new OperacaoDAO();
+    private OperacaoDAO dao = new OperacaoDAO();
     
     public void atualizaTabela(JTable tabela){
         DefaultTableModel model = (DefaultTableModel) tabela.getModel();
         
         model.setNumRows(0);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-        for(Operacao o : od.listarOperacao()){
+        for(Operacao o : dao.listarOperacao()){
         
            String entradaFormatada = "";
            String saidaFormatada = "";
@@ -34,8 +35,6 @@ public class OperacaoController {
            }else{
                saidaFormatada = o.getHorarioSaida().format(dtf);
            }
-        
-       
 
             model.addRow(new Object[]{
                 o.getId_operacao(),
@@ -48,6 +47,15 @@ public class OperacaoController {
             });
         }
     
+    }
+    
+    public void checkout(int idOperacao){
+        Operacao op = dao.buscarPorId(idOperacao);
+        System.out.println(op.getValorHora());
+        op.setHorarioSaida(LocalDateTime.now());
+        op.calcularValorTotal();
+        dao.inserirSaida(op);
+        
     }
     
     
