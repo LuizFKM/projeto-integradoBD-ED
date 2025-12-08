@@ -23,13 +23,13 @@ public class OperacaoController {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         for(Operacao o : od.listarOperacao()){
         String entradaFormatada = o.getHorarioEntrada().format(dtf);
-        String saidaFormatada = o.getHorarioSaida().format(dtf);
+
             model.addRow(new Object[]{
                 o.getId_operacao(),
                 o.getVaga().getId(),
                 o.getVeiculo().getPlaca(),
                 entradaFormatada,
-                saidaFormatada,
+
                 o.getValorTotal(),
                 o.getValorHora()
             });
