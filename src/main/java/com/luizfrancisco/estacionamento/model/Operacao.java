@@ -4,6 +4,7 @@
  */
 package com.luizfrancisco.estacionamento.model;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
@@ -90,6 +91,19 @@ public class Operacao {
 
     public void setVaga(Vaga vaga) {
         this.vaga = vaga;
+    }
+    
+    public void calcularValorTotal(){
+        if(this.horarioEntrada != null && this.horarioSaida != null){
+            Duration duracao = Duration.between(this.horarioEntrada, this.horarioSaida);
+            
+            long horas = duracao.toHours();
+            
+            if(duracao.toMinutes() % 60 > 0){
+                horas++;
+            }
+            this.valorTotal = horas * this.valorHora;
+        }
     }
 
     @Override

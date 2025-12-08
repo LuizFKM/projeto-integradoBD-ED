@@ -22,14 +22,27 @@ public class OperacaoController {
         model.setNumRows(0);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         for(Operacao o : od.listarOperacao()){
-        String entradaFormatada = o.getHorarioEntrada().format(dtf);
+        
+           String entradaFormatada = "";
+           String saidaFormatada = "";
+           if(o.getHorarioEntrada() != null){
+               entradaFormatada = o.getHorarioEntrada().format(dtf);
+           }
+           
+           if(o.getHorarioSaida() == null){
+               saidaFormatada = "Em andamento.";
+           }else{
+               saidaFormatada = o.getHorarioSaida().format(dtf);
+           }
+        
+       
 
             model.addRow(new Object[]{
                 o.getId_operacao(),
                 o.getVaga().getId(),
                 o.getVeiculo().getPlaca(),
                 entradaFormatada,
-
+                saidaFormatada,
                 o.getValorTotal(),
                 o.getValorHora()
             });
