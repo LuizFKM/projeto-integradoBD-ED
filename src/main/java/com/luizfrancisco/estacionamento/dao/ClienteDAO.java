@@ -69,5 +69,44 @@ public class ClienteDAO {
             e.printStackTrace();
         }
     }
+public List<Cliente> buscar(String nomeOuCodigo){
+    List<Cliente> lista = new ArrayList<>();
     
+    // Query adaptada para buscar por NOME (LIKE) ou ID (CAST)
+    String sql = """
+                 SELECT id_cliente, nome, email, telefone 
+                 FROM cliente
+                 WHERE LOWER(nome) LIKE LOWER(?) 
+                 OR CAST(id_cliente AS CHAR) LIKE ?
+                 ORDER BY id_cliente
+                 """;
+    
+    try(Connection con = Conexao.getConnection(); 
+        PreparedStatement ps = con.prepareStatement(sql)){
+        
+        // Parâmetro 1: Busca por nome (usando % para buscar parte do nome)
+        ps.setString(1, "%" + nomeOuCodigo + "%");
+        
+        // Parâmetro 2: Busca por ID (converte o ID para string e usa LIKE)
+        ps.setString(2, "%" + nomeOuCodigo + "%");
+        
+        try(ResultSet rs = ps.executeQuery()){
+            while(rs.next()){
+                Cliente c = new Cliente();
+                
+                c.setId(rs.getInt("id_cliente"));
+                c.setNome(rs.getString("nome"));
+                c.setEmail(rs.getString("email"));
+                c.setTelefone(rs.getString("telefone"));
+                
+                lista.add(c);
+            }
+        }
+    
+    }catch(SQLException e){
+        System.out.println("Erro ao buscar cliente: " + e);
+    
+    }
+    return lista;
+    }
 }

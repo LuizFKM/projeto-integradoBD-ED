@@ -18,6 +18,7 @@ import com.luizfrancisco.estacionamento.model.Veiculo;
 import com.luizfrancisco.estacionamento.model.Vaga;
 import java.time.LocalDateTime;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author User
@@ -35,6 +36,7 @@ public class Principal extends javax.swing.JFrame {
     private final VeiculoController vc = new VeiculoController();
     private final VagaController vgc = new VagaController();
     private final OperacaoController oc = new OperacaoController();
+    
 
     
     private int linha = -1;
@@ -44,7 +46,7 @@ public class Principal extends javax.swing.JFrame {
         cc.atualizaTabela(tblClientesPrincipal);
         vc.atualizaTabela(tblCadastroVeiculos);
         vgc.atualizaTabela(tblVagas);
-        oc.atualizaTabela(operacaoTable);
+        oc.atualizaTabela(tblOperacao);
         preencheCbxVaga();
         setLocationRelativeTo(null);
         setResizable(false);
@@ -110,14 +112,14 @@ public class Principal extends javax.swing.JFrame {
         ftdPrecoHora = new javax.swing.JFormattedTextField();
         jToggleButton1 = new javax.swing.JToggleButton();
         jScrollPane5 = new javax.swing.JScrollPane();
-        operacaoTable = new javax.swing.JTable();
+        tblOperacao = new javax.swing.JTable();
         Vagas = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblVagas = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
-        jTextField8 = new javax.swing.JTextField();
+        txtBuscarVaga = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
+        btnBuscarVaga = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -164,8 +166,18 @@ public class Principal extends javax.swing.JFrame {
                 txtBuscarClienteActionPerformed(evt);
             }
         });
+        txtBuscarCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBuscarClienteKeyPressed(evt);
+            }
+        });
 
         btnBuscarCliente.setText("Buscar");
+        btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarClienteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
@@ -295,14 +307,24 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        txtBuscarVeiculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Buscar Cliente"));
+        txtBuscarVeiculo.setBorder(javax.swing.BorderFactory.createTitledBorder("Buscar Veiculo"));
         txtBuscarVeiculo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtBuscarVeiculoActionPerformed(evt);
             }
         });
+        txtBuscarVeiculo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBuscarVeiculoKeyPressed(evt);
+            }
+        });
 
         btnBuscarVeiculo.setText("Buscar");
+        btnBuscarVeiculo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarVeiculoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -349,13 +371,14 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(txtNomeClienteVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addGap(5, 5, 5)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSalvarCadastroVeiculo)
-                    .addComponent(btnDeletarVeiculo)
-                    .addComponent(btnEditarVeiculo)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtBuscarVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnBuscarVeiculo)))
+                        .addComponent(btnBuscarVeiculo))
+                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnSalvarCadastroVeiculo)
+                        .addComponent(btnDeletarVeiculo)
+                        .addComponent(btnEditarVeiculo)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -505,6 +528,11 @@ public class Principal extends javax.swing.JFrame {
                 txtBuscarOperacaoActionPerformed(evt);
             }
         });
+        txtBuscarOperacao.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBuscarOperacaoKeyPressed(evt);
+            }
+        });
 
         btnBuscarOp.setText("Buscar");
 
@@ -596,7 +624,7 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        operacaoTable.setModel(new javax.swing.table.DefaultTableModel(
+        tblOperacao.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -615,9 +643,9 @@ public class Principal extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane5.setViewportView(operacaoTable);
-        if (operacaoTable.getColumnModel().getColumnCount() > 0) {
-            operacaoTable.getColumnModel().getColumn(1).setResizable(false);
+        jScrollPane5.setViewportView(tblOperacao);
+        if (tblOperacao.getColumnModel().getColumnCount() > 0) {
+            tblOperacao.getColumnModel().getColumn(1).setResizable(false);
         }
 
         javax.swing.GroupLayout OperacionalLayout = new javax.swing.GroupLayout(Operacional);
@@ -663,10 +691,21 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
+        txtBuscarVaga.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtBuscarVagaKeyPressed(evt);
+            }
+        });
+
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Buscar vaga");
 
-        jButton5.setText("Buscar");
+        btnBuscarVaga.setText("Buscar");
+        btnBuscarVaga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarVagaActionPerformed(evt);
+            }
+        });
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Informações da vaga"));
 
@@ -718,9 +757,9 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5)
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jTextField8)
+                        .addComponent(txtBuscarVaga)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel5Layout.createSequentialGroup()
-                            .addComponent(jButton5)
+                            .addComponent(btnBuscarVaga)
                             .addGap(0, 156, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 119, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -735,9 +774,9 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscarVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5)))
+                        .addComponent(btnBuscarVaga)))
                 .addContainerGap(129, Short.MAX_VALUE))
         );
 
@@ -854,11 +893,11 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNomeClienteOpActionPerformed
 
     private void btnFinalizarOpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarOpActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_btnFinalizarOpActionPerformed
 
     private void txtBuscarOperacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarOperacaoActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_txtBuscarOperacaoActionPerformed
 
     private void btnSalvarCadastroClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarCadastroClienteActionPerformed
@@ -898,7 +937,7 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSalvarCadastroVeiculoActionPerformed
 
     private void tblCadastroVeiculosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCadastroVeiculosMouseClicked
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_tblCadastroVeiculosMouseClicked
 
     private void tblClientesPrincipalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesPrincipalMouseClicked
@@ -985,7 +1024,7 @@ public class Principal extends javax.swing.JFrame {
             Operacao op = retornaOperacao();
             op.setVaga(vagaDoCombo);
             oDAO.inserirEntrada(op);
-            oc.atualizaTabela(operacaoTable);
+            oc.atualizaTabela(tblOperacao);
             JOptionPane.showMessageDialog(this, "Entrada registrada com sucesso!");
             
         }catch (Exception e){
@@ -1004,6 +1043,48 @@ public class Principal extends javax.swing.JFrame {
     private void txtBuscarVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarVeiculoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarVeiculoActionPerformed
+
+    private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
+    atualizarTabelaOperacoesComFiltro(txtBuscarOperacao.getText());
+    }//GEN-LAST:event_btnBuscarClienteActionPerformed
+
+    private void txtBuscarOperacaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarOperacaoKeyPressed
+    atualizarTabelaOperacoesComFiltro(txtBuscarOperacao.getText());
+    }//GEN-LAST:event_txtBuscarOperacaoKeyPressed
+
+    private void txtBuscarVagaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarVagaKeyPressed
+    atualizarTabelaVagasComFiltro(txtBuscarVaga.getText());
+    }//GEN-LAST:event_txtBuscarVagaKeyPressed
+
+    private void btnBuscarVagaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarVagaActionPerformed
+
+    }//GEN-LAST:event_btnBuscarVagaActionPerformed
+
+    private void txtBuscarClienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarClienteKeyPressed
+    String buscar = txtBuscarCliente.getText();
+        DefaultTableModel model = (DefaultTableModel) tblClientesPrincipal.getModel();
+        model.setNumRows(0);
+
+        // 4. Preenche a tabela com a lista resultante (filtrada ou completa)
+        for (Cliente c : cDAO.buscar(buscar)){
+            model.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getEmail(),
+                c.getTelefone(),
+            });
+        }    
+    }//GEN-LAST:event_txtBuscarClienteKeyPressed
+
+    private void txtBuscarVeiculoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarVeiculoKeyPressed
+    atualizarTabelaVeiculosComFiltro(txtBuscarVeiculo.getText());
+    }//GEN-LAST:event_txtBuscarVeiculoKeyPressed
+
+    private void btnBuscarVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarVeiculoActionPerformed
+        String buscar = txtBuscarVeiculo.getText();
+        // Chama a mesma lógica da busca instantânea
+        atualizarTabelaComFiltro(buscar);
+    }//GEN-LAST:event_btnBuscarVeiculoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1048,6 +1129,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel Veiculo;
     private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarOp;
+    private javax.swing.JButton btnBuscarVaga;
     private javax.swing.JButton btnBuscarVeiculo;
     private javax.swing.JButton btnDeletarVeiculo;
     private javax.swing.JButton btnEditarVeiculo;
@@ -1061,7 +1143,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton btnSalvarCadastroVeiculo;
     private javax.swing.JComboBox<Vaga> cbxVagas;
     private javax.swing.JFormattedTextField ftdPrecoHora;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1082,15 +1163,15 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JLabel lblBuscarVeiculo;
-    private javax.swing.JTable operacaoTable;
     private javax.swing.JTable tblCadastroVeiculos;
     private javax.swing.JTable tblClientesPrincipal;
+    private javax.swing.JTable tblOperacao;
     private javax.swing.JTable tblVagas;
     private javax.swing.JTextField txtBuscarCliente;
     private javax.swing.JTextField txtBuscarOperacao;
+    private javax.swing.JTextField txtBuscarVaga;
     private javax.swing.JTextField txtBuscarVeiculo;
     private javax.swing.JTextField txtCorOp;
     private javax.swing.JTextField txtCorVeiculoCadastro;
@@ -1115,7 +1196,6 @@ private Cliente retornaCliente(){
         c.setTelefone(telefone);
         return c;
     }
-
 private Veiculo retornaVeiculo(){
         String placa = txtPlacaVeiculoCadastro.getText();
         String modelo = txtModeloVeiculoCadastro.getText();
@@ -1134,7 +1214,6 @@ private Veiculo retornaVeiculo(){
         v.setCliente(this.clienteSelecionado);
         return v;
     }
-
 private Operacao retornaOperacao(){
     
     Operacao op = new Operacao();
@@ -1146,7 +1225,6 @@ private Operacao retornaOperacao(){
     
     return op;
 }
-
 public void preencherCliente(Cliente c){
         this.clienteSelecionado = c;
         txtNomeClienteVeiculo.setText(c.getNome());
@@ -1175,13 +1253,132 @@ public void limparCamposVeiculo() {
     this.clienteSelecionado = null; 
 
     }
-
 public final void preencheCbxVaga(){
     cbxVagas.removeAllItems();
     
 
         for (Vaga v : vgDAO.listarVagas()) {
             cbxVagas.addItem(v);
+        }
+    }
+private void atualizarTabelaComFiltro(String busca) {
+DefaultTableModel model = (DefaultTableModel) tblClientesPrincipal.getModel();
+        model.setNumRows(0); // Limpa a tabela
+
+        java.util.List<Cliente> clientes;
+        String buscaTermo = busca.trim();
+        
+        // 1. Decide se lista tudo ou filtra
+        if (buscaTermo.isEmpty()) {
+            clientes = cDAO.listar(); // Usa o listar() se o campo estiver vazio
+        } else {
+            clientes = cDAO.buscar(buscaTermo); // Usa o novo método buscar(String)
+        }
+        
+        // 2. Preenche a tabela com a lista resultante (filtrada ou completa)
+        for (Cliente c : clientes) {
+            model.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getEmail(),
+                c.getTelefone()
+            });
+        }
+}
+private void atualizarTabelaVeiculosComFiltro(String busca) {
+        // !! SUBSTITUIR AQUI: Use o nome correto da sua JTable de Veículos !!
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblCadastroVeiculos.getModel();
+        model.setRowCount(0);
+
+        java.util.List<com.luizfrancisco.estacionamento.model.Veiculo> veiculos;
+        String buscaTermo = busca.trim();
+        
+        if (buscaTermo.isEmpty()) {
+            veiculos = vDAO.listarVeiculo(); 
+        } else {
+            veiculos = vDAO.buscar(buscaTermo); 
+        }
+        
+        // Preenche a tabela
+        for (com.luizfrancisco.estacionamento.model.Veiculo v : veiculos) {
+            model.addRow(new Object[]{
+                v.getId(),
+                v.getPlaca(),
+                v.getModelo(),
+                v.getCor(),
+                v.getCliente().getNome() // Pega o nome do cliente
+            });
+        }
+    }
+private void atualizarTabelaOperacoesComFiltro(String busca) {
+        // !! SUBSTITUA 'tblOperacoes' pelo nome da sua JTable de Operações !!
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblOperacao.getModel();
+        model.setRowCount(0);
+
+        java.util.List<com.luizfrancisco.estacionamento.model.Operacao> operacoes;
+        String buscaTermo = busca.trim();
+        
+        // 1. Decide se lista tudo ou filtra
+        if (buscaTermo.isEmpty()) {
+            operacoes = oDAO.listarOperacao(); // Lista tudo
+        } else {
+            operacoes = oDAO.buscar(buscaTermo); // Filtra usando OperacaoDAO
+        }
+        
+        // 2. Preenche a tabela
+        for (com.luizfrancisco.estacionamento.model.Operacao op : operacoes) {
+            // Formata o horário de saída (mostra "Em Aberto" se null)
+            String horarioSaida = (op.getHorarioSaida() != null) ? op.getHorarioSaida().toString() : "Em Aberto";
+            
+            model.addRow(new Object[]{
+                op.getId_operacao(),
+                op.getVeiculo().getPlaca(),
+                op.getVeiculo().getModelo(),
+                op.getVaga().getId(),
+                op.getHorarioEntrada().toString(),
+                horarioSaida,
+                op.getValorTotal()
+            });
+        }
+    }
+private void atualizarTabelaVagasComFiltro(String busca) {
+        // !! SUBSTITUA 'tblVagas' pelo nome da sua JTable de Vagas !!
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblVagas.getModel();
+        model.setRowCount(0);
+
+        java.util.List<com.luizfrancisco.estacionamento.model.Vaga> vagas;
+        String buscaTermo = busca.trim();
+        
+        if (buscaTermo.isEmpty()) {
+            vagas = vgDAO.listarVagas(); // Lista tudo
+        } else {
+            // 1. Primeiro, tenta buscar por ID (o que é feito no DAO)
+            vagas = vgDAO.buscar(buscaTermo); 
+
+            // 2. FILTRO NA VIEW (Filtra apenas se o termo for "true" ou "false")
+            String termoStatus = buscaTermo.toLowerCase();
+            
+            // Verifica se o termo digitado é EXATAMENTE "true" ou "false"
+            boolean isStatusFilterActive = termoStatus.equals("true") || termoStatus.equals("false"); 
+
+            if (isStatusFilterActive) {
+                // Determina o status booleano esperado pelo usuário
+                boolean isOcupada = termoStatus.equals("true"); 
+                
+                // Remove da lista todas as vagas cujo status não corresponde ao valor booleano esperado.
+                vagas.removeIf(v -> v.isStatus() != isOcupada); 
+            }
+        }
+        
+        // 3. Preenche a tabela
+        for (com.luizfrancisco.estacionamento.model.Vaga v : vagas) {
+            // EXIBIÇÃO AJUSTADA: Usa diretamente o valor booleano 'true' ou 'false'
+            String status = String.valueOf(v.isStatus()); 
+            
+            model.addRow(new Object[]{
+                v.getId(),
+                status // Exibe "true" ou "false"
+            });
         }
     }
 }
