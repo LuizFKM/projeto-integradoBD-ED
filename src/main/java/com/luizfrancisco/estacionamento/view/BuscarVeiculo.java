@@ -30,6 +30,9 @@ public class BuscarVeiculo extends javax.swing.JFrame {
         initComponents();
         atualizarTabela("");
         this.origem = origem;
+        setResizable(false); 
+        setLocationRelativeTo(this);
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -43,7 +46,6 @@ public class BuscarVeiculo extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         txtPesquisaVeiculo = new javax.swing.JTextField();
-        btnBuscarVeiculo = new javax.swing.JButton();
         btnSelecionarVeiculo = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBuscarVeiculos = new javax.swing.JTable();
@@ -62,13 +64,6 @@ public class BuscarVeiculo extends javax.swing.JFrame {
         txtPesquisaVeiculo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtPesquisaVeiculoKeyPressed(evt);
-            }
-        });
-
-        btnBuscarVeiculo.setText("Buscar");
-        btnBuscarVeiculo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarVeiculoActionPerformed(evt);
             }
         });
 
@@ -97,17 +92,14 @@ public class BuscarVeiculo extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtPesquisaVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnBuscarVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnSelecionarVeiculo)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 913, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSelecionarVeiculo)
+                    .addComponent(txtPesquisaVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,9 +107,7 @@ public class BuscarVeiculo extends javax.swing.JFrame {
                 .addGap(41, 41, 41)
                 .addComponent(txtPesquisaVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnBuscarVeiculo)
-                    .addComponent(btnSelecionarVeiculo))
+                .addComponent(btnSelecionarVeiculo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -152,14 +142,11 @@ public class BuscarVeiculo extends javax.swing.JFrame {
             }else {
                 id = Integer.parseInt(idObj.toString());
             }
-            
             String placa = (String) tblBuscarVeiculos.getValueAt(linhaSelecionada, 1);
             String modelo = (String) tblBuscarVeiculos.getValueAt(linhaSelecionada, 2);
             String cor = (String) tblBuscarVeiculos.getValueAt(linhaSelecionada, 3);
             String nomeCliente = tblBuscarVeiculos.getValueAt(linhaSelecionada, 4).toString();
-            
-            
-            
+
             Cliente cliente = new Cliente(); 
             cliente.setNome(nomeCliente);
 
@@ -180,12 +167,6 @@ public class BuscarVeiculo extends javax.swing.JFrame {
         // A cada tecla solta, a tabela é atualizada automaticamente
         atualizarTabela(buscar);
     }//GEN-LAST:event_txtPesquisaVeiculoKeyPressed
-
-    private void btnBuscarVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarVeiculoActionPerformed
-    String buscar = txtPesquisaVeiculo.getText();
-        // Chama a mesma lógica da busca instantânea
-        atualizarTabela(buscar);
-    }//GEN-LAST:event_btnBuscarVeiculoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -223,7 +204,6 @@ public class BuscarVeiculo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBuscarVeiculo;
     private javax.swing.JButton btnSelecionarVeiculo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;

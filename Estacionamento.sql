@@ -92,20 +92,25 @@ ORDER BY v.id_vaga;
 
 SELECT * FROM vw_informacoes_vaga;
 
-CREATE OR REPLACE VIEW vw_informacoes_vaga_jasper AS 
+CREATE VIEW vw_informacoes_vaga_jasper AS 
 SELECT 
     v.id_vaga, 
     COUNT(o.id_operacao) AS quantidade_operacoes,
-    COALESCE(SUM(o.valor_total), 0) AS valor_total_acumulado, -- COALESCE evita erro se for nulo
-    -- AQUI ESTÁ A CORREÇÃO:
-    -- Transformamos o intervalo em texto (VARCHAR) para o Jasper não travar
-    CAST(SUM(o.horario_saida - o.horario_entrada) AS VARCHAR) AS tempo_total_acumulado
+    COALESCE(SUM(o.valor_total), 0) AS valor_total_acumulado,
+    (
+        FLOOR(EXTRACT(EPOCH FROM SUM(o.horario_saida - o.horario_entrada)) / 3600)::text 
+        || ':' || 
+        TO_CHAR(EXTRACT(MINUTE FROM SUM(o.horario_saida - o.horario_entrada)), 'FM00') 
+        || ':' || 
+        TO_CHAR(EXTRACT(SECOND FROM SUM(o.horario_saida - o.horario_entrada)), 'FM00')
+    ) AS tempo_total_acumulado
+
 FROM vaga AS v
 LEFT JOIN operacao AS o ON v.id_vaga = o.id_vaga
 GROUP BY v.id_vaga
 ORDER BY v.id_vaga;
-	
-	
+
+
 
 INSERT INTO vaga (status) VALUES (false); 
 INSERT INTO vaga (status) VALUES (false); 

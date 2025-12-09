@@ -35,7 +35,20 @@ public class OperacaoController {
         
     }
     
+    public void registrarEntrada(Operacao novaOperacao) throws Exception {
+    String placa = novaOperacao.getVeiculo().getPlaca();
+    boolean jaTemCarro = dao.verificaVeiculoEstacionado(placa);
     
+    if (jaTemCarro) {
+        throw new Exception("ERRO: O veículo " + placa + " já está estacionado!");
+    }
+
+    dao.inserirEntrada(novaOperacao);
+    }
     
-    
+    public void deletarOperacao(int idOperacao){
+        Operacao op = dao.buscarPorId(idOperacao);
+        dao.deletar(idOperacao);
+    }
+      
 }

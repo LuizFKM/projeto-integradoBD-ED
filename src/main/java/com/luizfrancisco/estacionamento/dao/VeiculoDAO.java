@@ -73,30 +73,30 @@ public List<Veiculo> listarVeiculo() {
     return listaVeiculos;
 }
 public void deletar(int id) {
-// Comando SQL adaptado: usamos id_veiculo
+
     String sql = "DELETE FROM veiculo WHERE id_veiculo = ?";
     
-    // Usando try-with-resources
+  
     try(Connection con = Conexao.getConnection();
         PreparedStatement ps = con.prepareStatement(sql)){
         
-        // 1. Define o ID do veículo a ser deletado
+        
         ps.setInt(1, id);
         
-        // 2. Executa o comando DELETE
+
         ps.executeUpdate();
         
     }catch(SQLException e){
-        // Imprime a stack trace completa para ajudar no debug
+      
         e.printStackTrace();
-        // Sugestão: Relançar a exceção para que o Controller possa notificar a View
+     
         throw new RuntimeException("Erro ao deletar veículo. Verifique se existem operações vinculadas.", e);
     }
 }
 public List<Veiculo> buscar(String termoBusca) {
         List<Veiculo> listaVeiculos = new ArrayList<>();
         
-        // QUERY ATUALIZADA: Busca por ID, Placa, Modelo, Cor e Nome do Cliente.
+    
         String sql = """
                      SELECT v.id_veiculo, v.modelo, v.cor, v.placa, c.id_cliente, c.nome, c.email
                      FROM veiculo AS v INNER JOIN cliente AS c ON v.id_cliente = c.id_cliente
@@ -111,13 +111,12 @@ public List<Veiculo> buscar(String termoBusca) {
              java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
 
             String param = "%" + termoBusca + "%";
-            
-            // Define 5 parâmetros de busca com o termo digitado
-            ps.setString(1, param); // 1. ID do Veículo
-            ps.setString(2, param); // 2. Placa
-            ps.setString(3, param); // 3. Modelo
-            ps.setString(4, param); // 4. Cor
-            ps.setString(5, param); // 5. Nome do Cliente
+          
+            ps.setString(1, param); 
+            ps.setString(2, param); 
+            ps.setString(3, param); 
+            ps.setString(4, param);
+            ps.setString(5, param);
 
             try (java.sql.ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {

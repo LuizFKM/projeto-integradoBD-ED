@@ -28,6 +28,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import com.luizfrancisco.estacionamento.model.EstatisticaVaga;
+import java.awt.Color;
 /**
  *
  * @author User
@@ -60,9 +61,11 @@ public class Principal extends javax.swing.JFrame {
         atualizarTabelaVeiculos("");
         atualizarTabelaVagas("");
         atualizarTabelaOperacoes("");
+        configurarListeners();
         preencheCbxVaga();
-        setLocationRelativeTo(null);
-        setResizable(false);
+        setLocationRelativeTo(this);
+        setResizable(false); 
+        
     }
     
  
@@ -480,6 +483,11 @@ public class Principal extends javax.swing.JFrame {
         });
 
         btnSalvarCadastroCliente10.setText("Deletar");
+        btnSalvarCadastroCliente10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarCadastroCliente10ActionPerformed(evt);
+            }
+        });
 
         btnSalvarCadastroCliente11.setText("Editar");
 
@@ -1049,16 +1057,17 @@ public class Principal extends javax.swing.JFrame {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         if(linhaSelecionada != -1 ){
            int id = (int) tblOperacao.getValueAt(linhaSelecionada, 0);
-           oc.checkout(id);
            this.op = oDAO.buscarPorId(id);
-           
-           
-           atualizarTabelaOperacoes("");
-           atualizarTabelaVagas("");
-           preencheCbxVaga();
+           oc.checkout(id);
+           atualizarEstadoBotaoFinalizar(id);
            atualizarPainelDadosOperacao(op);
-           
+           atualizarTabelaOperacoes("");
+           preencheCbxVaga();
            JOptionPane.showMessageDialog(this, "Operação finalizada!");
+        
+               
+               
+           
         }
     }//GEN-LAST:event_btnFinalizarOpActionPerformed
 
@@ -1164,10 +1173,11 @@ public class Principal extends javax.swing.JFrame {
             
             Operacao op = retornaOperacao();
             op.setVaga(vagaDoCombo);
-            oDAO.inserirEntrada(op);
+            oc.registrarEntrada(op);
             atualizarTabelaOperacoes("");
             atualizarTabelaVagas("");
             preencheCbxVaga();
+            limparCamposOperacao();
             JOptionPane.showMessageDialog(this, "Entrada registrada com sucesso!");
             
         }catch (Exception e){
@@ -1257,7 +1267,11 @@ public class Principal extends javax.swing.JFrame {
         String saida = tblOperacao.getValueAt(linhaSelecionada, 4).toString();
         String valorTotal = tblOperacao.getValueAt(linhaSelecionada, 5).toString();
         atualizarPainelDadosOperacao(op);
-
+        
+        txtPlacaOp.setText(op.getVeiculo().getPlaca());
+        txtModeloOp.setText(op.getVeiculo().getModelo());
+        txtCorOp.setText(op.getVeiculo().getCor());
+        txtNomeClienteOp.setText(op.getVeiculo().getCliente().getNome());
         }
     }//GEN-LAST:event_tblOperacaoMouseClicked
 
@@ -1283,6 +1297,29 @@ public class Principal extends javax.swing.JFrame {
     private void btnImprimirRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirRelatorioActionPerformed
         gerarRelatorio("relatorio_estacionamento");
     }//GEN-LAST:event_btnImprimirRelatorioActionPerformed
+
+    private void btnSalvarCadastroCliente10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarCadastroCliente10ActionPerformed
+       linhaSelecionada = tblOperacao.getSelectedRow();
+       
+       try{
+           if(linhaSelecionada > -1){
+           int id = (int) tblOperacao.getValueAt(linhaSelecionada, 0);
+           this.op = oDAO.buscarPorId(id);
+            if(op.getHorarioSaida() == null){
+                JOptionPane.showMessageDialog(this, 
+                        "Operação ainda não foi finalizada!.", 
+                        "Erro", JOptionPane.ERROR_MESSAGE);
+            }else{
+                oc.deletarOperacao(id);
+                JOptionPane.showMessageDialog(this, "Operação excluida!");
+                atualizarTabelaOperacoes("");
+            }
+          
+           }
+       }catch(Exception e){
+           System.out.println("ERRO -> " + e);
+       }
+    }//GEN-LAST:event_btnSalvarCadastroCliente10ActionPerformed
 
 
     /**
@@ -1466,6 +1503,14 @@ public void limparCamposVeiculo() {
     this.clienteSelecionado = null; 
 
     }
+
+public void limparCamposOperacao(){
+    txtPlacaOp.setText("");
+        txtModeloOp.setText("");
+        txtCorOp.setText("");
+        txtNomeClienteOp.setText("");
+}
+
 public final void preencheCbxVaga(){
     cbxVagas.removeAllItems();
     
@@ -1600,5 +1645,32 @@ private void gerarRelatorio(String tipo){
         e.printStackTrace();
     }
   }
+
+private void configurarListeners() {
+    tblOperacao.getSelectionModel().addListSelectionListener(e -> {     
+        if (!e.getValueIsAdjusting() && tblOperacao.getSelectedRow() != -1) {      
+            int linha = tblOperacao.getSelectedRow();
+            int id = (int) tblOperacao.getValueAt(linha, 0);
+            atualizarEstadoBotaoFinalizar(id);
+        }
+    });
+}
+
+
+private void atualizarEstadoBotaoFinalizar(int idOperacao) {
+    Operacao opVerificacao = oDAO.buscarPorId(idOperacao);
+
+    if (opVerificacao.getHorarioSaida() == null) {
+       
+        btnFinalizarOp.setEnabled(true);
+        btnFinalizarOp.setBackground(new Color(34, 139, 34));
+        btnFinalizarOp.setForeground(Color.WHITE);
+    } else {
+       
+        btnFinalizarOp.setEnabled(false);
+        btnFinalizarOp.setBackground(Color.LIGHT_GRAY); 
+        btnFinalizarOp.setForeground(Color.DARK_GRAY);
+    }
+}
 
 }

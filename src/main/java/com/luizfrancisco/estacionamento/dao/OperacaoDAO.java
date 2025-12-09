@@ -12,8 +12,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import com.luizfrancisco.estacionamento.model.Cliente;
 import com.luizfrancisco.estacionamento.model.Veiculo;
 import com.luizfrancisco.estacionamento.model.Vaga;
+import javax.swing.SpringLayout;
 /**
  *
  * @author luizfkm
@@ -53,6 +55,19 @@ public class OperacaoDAO {
                     
         }catch(SQLException e){
             System.out.println("ERRO ao registrar saída ->" + e);
+        }
+    }
+    
+    public void deletar(int id){
+        String sql = "DELETE FROM operacao WHERE id_operacao = ?";
+                
+        try (Connection con = Conexao.getConnection(); 
+                PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
     
@@ -119,38 +134,67 @@ public class OperacaoDAO {
     } 
     
     public Operacao buscarPorId(int id) {
-    String sql = "SELECT * FROM operacao WHERE id_operacao = ?";
+    String sql = "SELECT o.*, v.placa, v.modelo, c.id_cliente, v.cor, c.nome, vg.status as status_vaga " +
+                 "FROM operacao o " +
+                 "INNER JOIN veiculo v ON o.id_veiculo = v.id_veiculo " +
+                 "INNER JOIN cliente c ON v.id_cliente = c.id_cliente " + 
+                 "INNER JOIN vaga vg ON o.id_vaga = vg.id_vaga " +
+                 "WHERE o.id_operacao = ?";
+                 
     Operacao op = new Operacao();
-    
+
     try (Connection con = Conexao.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
-        
+
         ps.setInt(1, id);
         ResultSet rs = ps.executeQuery();
-        
+
         if (rs.next()) {
             op.setId_operacao(rs.getInt("id_operacao"));
+            
+            // --- 1. Monta o CLIENTE ---
+            Cliente cliente = new Cliente();
+            cliente.setId(rs.getInt("id_cliente"));
+            cliente.setNome(rs.getString("nome"));
+            // Se tiver telefone ou cpf, adicione aqui: cliente.setCpf(rs.getString("cpf"));
+
+            // --- 2. Monta o VEÍCULO e coloca o CLIENTE dentro ---
+            Veiculo veiculo = new Veiculo();
+            veiculo.setId(rs.getInt("id_veiculo")); 
+            veiculo.setPlaca(rs.getString("placa")); 
+            veiculo.setModelo(rs.getString("modelo")); 
+            veiculo.setCor(rs.getString("cor"));
+            
+            veiculo.setCliente(cliente); // <--- AQUI ESTAVA FALTANDO!
+            
+            op.setVeiculo(veiculo); 
+            // ----------------------------------------------
+
+            // --- 3. Monta a VAGA ---
             Vaga v = new Vaga();
             v.setId(rs.getInt("id_vaga"));
+            v.setStatus(rs.getBoolean("status_vaga"));
             op.setVaga(v);
-            
+
+            // --- 4. Monta os HORÁRIOS ---
             Timestamp tsEntrada = rs.getTimestamp("horario_entrada");
             if (tsEntrada != null) {
                 op.setHorarioEntrada(tsEntrada.toLocalDateTime());
             }
-            
+
             Timestamp tsSaida = rs.getTimestamp("horario_saida");
             if (tsSaida != null) {
                 op.setHorarioSaida(tsSaida.toLocalDateTime());
+                op.setValorTotal(rs.getDouble("valor_total"));
             } else {
                 op.setHorarioSaida(null);
+                op.setValorTotal(0.0);
             }
 
             op.setValorHora(rs.getDouble("valor_hora"));
-            op.setValorTotal(rs.getDouble("valor_total"));
         }
     } catch (SQLException e) {
-        System.out.println("Erro ao buscar operacao: " + e);
+        System.out.println("Erro ao buscar operacao completa: " + e);
     }
     return op;
 }
@@ -210,6 +254,30 @@ public List<Operacao> buscar(String termoBusca) {
             System.out.println("Erro ao buscar operação: " + e);
         }
         return lista;
+    }
+
+    public boolean verificaVeiculoEstacionado(String placaDoVeiculo){
+        String sql = "SELECT COUNT(*) " +
+                 "FROM operacao o " +
+                 "INNER JOIN veiculo v ON o.id_veiculo = v.id_veiculo " +
+                 "WHERE v.placa = ? AND o.horario_saida IS NULL";
+        
+        boolean isEstacionado = false;
+        try(Connection con = Conexao.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);){
+          
+            ps.setString(1, placaDoVeiculo);
+            
+            try(ResultSet rs = ps.executeQuery()){
+                if(rs.next()){
+                    isEstacionado = rs.getInt(1) > 0;
+                }
+            }
+        }catch(SQLException e){
+            System.out.println("ERRO ao verificar veículo estacionado -> " + e);
+        }
+        
+        return isEstacionado;
     }
 
 }

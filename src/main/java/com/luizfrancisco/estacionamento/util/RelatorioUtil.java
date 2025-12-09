@@ -31,22 +31,17 @@ public class RelatorioUtil {
             return;
         }
 
-       
         JasperReport relatorio = (JasperReport) JRLoader.loadObject(reportStream);
 
-        
         JasperPrint print = JasperFillManager.fillReport(relatorio, parametros, con);
 
-      
         if (print.getPages().isEmpty()) {
             System.out.println("ALERTA: O relatório foi gerado com 0 páginas (Dados vazios?).");
         }
-
-        
+  
         File pdfTemp = File.createTempFile("relatorio_final", ".pdf");
         JasperExportManager.exportReportToPdfFile(print, pdfTemp.getAbsolutePath());
         Desktop.getDesktop().open(pdfTemp);
-
     } catch (Exception e) {
         e.printStackTrace();
     }
