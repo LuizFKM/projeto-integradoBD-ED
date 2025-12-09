@@ -41,6 +41,22 @@ CREATE table operacao(
 	ON UPDATE CASCADE
 );
 
+CREATE TABLE usuario (
+    id SERIAL PRIMARY KEY,
+    login VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(100) NOT NULL,
+    role VARCHAR(20) CHECK (role in ('ADMIN', 'COLABORADOR')) NOT NULL
+);
+
+CREATE ROLE admin LOGIN PASSWORD 'admin123';
+GRANT ALL PRIVILEGES ON DATABASE estacionamento TO admin;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO admin;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO admin;
+
+CREATE ROLE colaborador LOGIN PASSWORD 'colab123';
+GRANT CONNECT ON DATABASE estacionamento TO colaborador;
+GRANT UPDATE, SELECT, INSERT ON operacao, cliente, veiculo TO colaborador;
+
 CREATE OR REPLACE FUNCTION fn_atualizar_status_da_vaga()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -90,7 +106,6 @@ LEFT JOIN operacao AS o ON v.id_vaga = o.id_vaga
 GROUP BY v.id_vaga
 ORDER BY v.id_vaga;
 
-SELECT * FROM vw_informacoes_vaga;
 
 CREATE VIEW vw_informacoes_vaga_jasper AS 
 SELECT 
@@ -110,59 +125,138 @@ LEFT JOIN operacao AS o ON v.id_vaga = o.id_vaga
 GROUP BY v.id_vaga
 ORDER BY v.id_vaga;
 
+CREATE MATERIALIZED VIEW mv_faturamento_mensal AS
+SELECT 
+    TO_CHAR(horario_saida, 'YYYY-MM') AS mes_referencia,
+    COUNT(id_operacao) AS total_veiculos,
+    SUM(valor_total) AS faturamento_total,
+    AVG(valor_total)::DECIMAL(10,2) AS ticket_medio
+FROM operacao
+WHERE horario_saida IS NOT NULL
+GROUP BY TO_CHAR(horario_saida, 'YYYY-MM')
+ORDER BY mes_referencia DESC
+WITH DATA;
 
 
-INSERT INTO vaga (status) VALUES (false); 
-INSERT INTO vaga (status) VALUES (false); 
-INSERT INTO vaga (status) VALUES (false); 
-INSERT INTO vaga (status) VALUES (false); 
-INSERT INTO vaga (status) VALUES (false); 
-INSERT INTO vaga (status) VALUES (false); 
-INSERT INTO vaga (status) VALUES (false); 
-INSERT INTO vaga (status) VALUES (false); 
-INSERT INTO vaga (status) VALUES (false); 
-INSERT INTO vaga (status) VALUES (false); 
 
-INSERT INTO cliente (nome, email, telefone) VALUES 
-('Luiz Francisco', 'luiz@ifpr.edu.br', '46999010101'),
-('Maria Silva', 'maria@gmail.com', '46999020202'),
-('João Souza', 'joao@hotmail.com', '41988030303'),
-('Ana Pereira', 'ana.p@bol.com.br', '11977040404'),
-('Carlos Lima', 'carlos@empresa.com', '46991050505');
+CREATE OR REPLACE PROCEDURE pr_registrar_entrada(
+    p_id_veiculo INT, 
+    p_id_vaga INT,
+    p_valor_hora DECIMAL
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+   
+    INSERT INTO operacao (horario_entrada, valor_hora, id_veiculo, id_vaga)
+    VALUES (NOW(), p_valor_hora, p_id_veiculo, p_id_vaga);
 
-INSERT INTO veiculo (modelo, cor, placa, id_cliente) VALUES 
-('Honda Civic', 'Prata', 'ABC1234', 1),
-('VW Gol', 'Branco', 'XYZ9876', 2),
-('Fiat Palio', 'Vermelho', 'DEF4567', 3),
-('Toyota Corolla', 'Preto', 'GHI7890', 4),
-('Chevrolet Onix', 'Azul', 'JKL3210', 5),
-('Ford Ka', 'Branco', 'MNO6543', 1);
+    COMMIT;
+END;
+$$;
 
-INSERT INTO operacao (horario_entrada, horario_saida, valor_hora, valor_total, id_veiculo, id_vaga) 
-VALUES (NOW() - INTERVAL '1 day 2 hours', NOW() - INTERVAL '1 day', 10.00, 20.00, 1, 1);
+CREATE OR REPLACE PROCEDURE pr_registrar_saida_manual(
+    p_id_operacao INT,
+    p_valor_total DECIMAL
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN   
+    UPDATE operacao
+    SET horario_saida = NOW(),
+        valor_total = p_valor_total
+    WHERE id_operacao = p_id_operacao;
+    COMMIT;
+END;
+$$;
 
-INSERT INTO operacao (horario_entrada, horario_saida, valor_hora, valor_total, id_veiculo, id_vaga) 
-VALUES (NOW() - INTERVAL '1 day 6 hours', NOW() - INTERVAL '1 day 1 hour', 10.00, 50.00, 2, 2);
+CREATE OR REPLACE FUNCTION fn_calcular_valor_total(p_id_operacao INT)
+RETURNS DECIMAL(10,2)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_entrada TIMESTAMP;
+    v_valor_hora DECIMAL(10,2);
+    v_horas_permanencia DECIMAL;
+    v_total DECIMAL(10,2);
+BEGIN
+   
+    SELECT horario_entrada, valor_hora INTO v_entrada, v_valor_hora
+    FROM operacao 
+    WHERE id_operacao = p_id_operacao;
 
-INSERT INTO operacao (horario_entrada, horario_saida, valor_hora, valor_total, id_veiculo, id_vaga) 
-VALUES (NOW() - INTERVAL '4 hours', NOW() - INTERVAL '3 hours 30 minutes', 10.00, 10.00, 3, 3);
-
-INSERT INTO operacao (horario_entrada, horario_saida, valor_hora, valor_total, id_veiculo, id_vaga) 
-VALUES (NOW() - INTERVAL '15 hours', NOW() - INTERVAL '3 hours', 10.00, 120.00, 4, 4);
-
-
-INSERT INTO operacao (horario_entrada, horario_saida, valor_hora, valor_total, id_veiculo, id_vaga) 
-VALUES (NOW() - INTERVAL '2 hours', NOW() - INTERVAL '50 minutes', 10.00, 20.00, 5, 5);
+   
+    IF v_entrada IS NULL THEN
+        RETURN 0.00;
+    END IF;
 
 
-INSERT INTO operacao (horario_entrada, horario_saida, valor_hora, valor_total, id_veiculo, id_vaga) 
-VALUES (NOW() - INTERVAL '1 hour', NULL, 10.00, NULL, 6, 8);
+    v_horas_permanencia := EXTRACT(EPOCH FROM (NOW() - v_entrada)) / 3600;
+
+   
+    v_horas_permanencia := CEIL(v_horas_permanencia);
+    
+    IF v_horas_permanencia < 1 THEN 
+        v_horas_permanencia := 1; 
+    END IF;
 
 
-INSERT INTO operacao (horario_entrada, horario_saida, valor_hora, valor_total, id_veiculo, id_vaga) 
-VALUES (NOW() - INTERVAL '15 minutes', NULL, 10.00, NULL, 1, 9);
+    v_total := v_horas_permanencia * v_valor_hora;
 
-select * from cliente;
-select * from veiculo;
-select * from vaga;
-select * from operacao;
+    RETURN v_total;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE pr_realizar_checkout(p_id_operacao INT)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_valor_final DECIMAL(10,2);
+BEGIN
+
+    v_valor_final := fn_calcular_valor_total(p_id_operacao);
+
+    UPDATE operacao
+    SET horario_saida = NOW(),
+        valor_total = v_valor_final
+    WHERE id_operacao = p_id_operacao;
+    
+    COMMIT;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION fn_relatorio_periodo(
+    p_data_inicio TIMESTAMP, 
+    p_data_fim TIMESTAMP
+)
+RETURNS TABLE (
+    cod_operacao INT,
+    nome_cliente VARCHAR,
+    placa_veiculo VARCHAR,
+    data_entrada TIMESTAMP,
+    data_saida TIMESTAMP,
+    valor_cobrado DECIMAL
+) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    
+    RETURN QUERY 
+    SELECT 
+        o.id_operacao,
+        c.nome,
+        v.placa,
+        o.horario_entrada,
+        o.horario_saida,
+        o.valor_total
+    FROM operacao o
+    INNER JOIN veiculo v ON o.id_veiculo = v.id_veiculo
+    INNER JOIN cliente c ON v.id_cliente = c.id_cliente
+    WHERE o.horario_saida BETWEEN p_data_inicio AND p_data_fim
+    ORDER BY o.horario_saida DESC;
+END;
+$$;
+
+
+
+

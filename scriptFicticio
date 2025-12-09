@@ -1,0 +1,69 @@
+
+TRUNCATE TABLE operacao, veiculo, cliente, vaga, usuario RESTART IDENTITY CASCADE;
+
+-- ============================================================================
+-- 2. CADASTROS BÁSICOS (Dados para o sistema funcionar)
+-- ============================================================================
+
+-- Clientes
+INSERT INTO cliente (nome, email, telefone) VALUES 
+('Luiz', 'luiz@teste.com', '9999-1111'),
+('Nycollas', 'nycollas@teste.com', '9999-2222'),
+('Ronaldo', 'ronaldo@teste.com', '9999-3333');
+SELECT * FROM CLIENTE;
+TRUNCATE TABLE CLIENTE;
+-- Veículos
+INSERT INTO veiculo (modelo, cor, placa, id_cliente) VALUES 
+('Civic', 'Preto', 'AAA1111', 1),
+('Gol', 'Branco', 'BBB2222', 2),
+('Moto CB', 'Vermelho', 'CCC3333', 3);
+
+TRUNCATE TABLE VEICULO;
+SELECT * FROM veiculo;
+TRUNCATE TABLE OPERACAO, VEICULO, CLIENTE CASCADE;
+
+-- Vagas
+INSERT INTO vaga (status) VALUES 
+(false), (false), (false), (false), (false),
+(false), (false), (false), (false), (false);
+
+-- Usuários
+INSERT INTO usuario (login, senha, role) VALUES 
+('admin', '123', 'ADMIN'),
+('colab', '123', 'COLABORADOR');
+
+
+-- 3. EXECUTANDO AS PROCEDURES
+
+-- entrada
+-- Veículo 1 entra na Vaga 1
+CALL pr_registrar_entrada(1, 1, 15.00);
+
+-- Veículo 2 entra na Vaga 2
+CALL pr_registrar_entrada(2, 2, 15.00);
+
+
+
+
+-- chekcout
+INSERT INTO operacao (horario_entrada, valor_hora, id_veiculo, id_vaga) 
+VALUES (NOW() - INTERVAL '5 hours', 20.00, 1, 4);
+
+CALL pr_realizar_checkout(3);
+
+SELECT * FROM OPERACAO;
+
+-- 4. VISUALIZANDO OS RESULTADOS Views e Functions
+
+
+-- Atualiza a View Materializada
+REFRESH MATERIALIZED VIEW mv_faturamento_mensal;
+
+-- Mostra o Relatório Financeiro 
+SELECT * FROM mv_faturamento_mensal;
+
+-- Mostra a View normal
+SELECT * FROM vw_informacoes_vaga;
+
+-- Mostra o Relatório por Período Function que retorna tabela
+SELECT * FROM fn_relatorio_periodo('2024-01-01', '2030-12-31');
