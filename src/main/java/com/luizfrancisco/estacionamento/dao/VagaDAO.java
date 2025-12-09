@@ -5,12 +5,14 @@
 package com.luizfrancisco.estacionamento.dao;
 
 import com.luizfrancisco.estacionamento.database.Conexao;
+import com.luizfrancisco.estacionamento.model.EstatisticaVaga;
 
 import com.luizfrancisco.estacionamento.model.Vaga;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,12 +74,44 @@ public class VagaDAO {
                     listaVagas.add(v);
                 }
             }
-        } catch (java.sql.SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Erro ao buscar vaga: " + e);
         }
         return listaVagas;
     }
-    
-   
+
+   public EstatisticaVaga vwInfoVaga(int idVaga){
+       String sql = "SELECT * FROM vw_informacoes_vaga WHERE id_vaga = ?";
+       
+       EstatisticaVaga ev = new EstatisticaVaga();
+       
+       ev.setQtd(0);
+       ev.setValor(0.0);
+       ev.setTempoFormatado("00:00:00");
+       
+       try(Connection con = Conexao.getConnection();
+           PreparedStatement ps = con.prepareStatement(sql)) {
+           ps.setInt(1, idVaga);
+
+           try(ResultSet rs = ps.executeQuery()){
+               if(rs.next()){
+                   ev.setQtd(rs.getInt("quantidade_operacoes"));
+                   ev.setValor(rs.getDouble("valor_total_acumulado"));
+                   String tempo = rs.getString("tempo_total_acumulado");
+                   
+                   if(tempo != null){
+                       ev.setTempoFormatado(tempo);
+                   }else{
+                       ev.setTempoFormatado("00:00:00");
+                   }  
+               }
+           }
+        
+       }catch(SQLException e){
+           System.out.println("Erro ao buscar estatísticas da vaga: " + e);
+       }
+       return ev;
+       
+   }
     
 }

@@ -22,6 +22,7 @@ import com.luizfrancisco.estacionamento.model.Operacao;
 import java.time.format.DateTimeFormatter;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.luizfrancisco.estacionamento.model.EstatisticaVaga;
 /**
  *
  * @author User
@@ -34,6 +35,8 @@ public class Principal extends javax.swing.JFrame {
     private Cliente clienteSelecionado = null;
     private Veiculo veiculoSelecionado = null;
     private Operacao op;
+    private EstatisticaVaga ev;
+    
     
     private final ClienteController cc = new ClienteController();
     private int linhaSelecionada = -1;
@@ -133,10 +136,14 @@ public class Principal extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         btnBuscarVaga = new javax.swing.JButton();
         jPanel7 = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
+        lblVaga4 = new javax.swing.JLabel();
+        lblvaga1 = new javax.swing.JLabel();
+        lblVaga3 = new javax.swing.JLabel();
+        lblVaga2 = new javax.swing.JLabel();
+        lblCodVagaInfo = new javax.swing.JLabel();
+        lblQtdOpVagaInfo = new javax.swing.JLabel();
+        lblValTotalVagaInfo = new javax.swing.JLabel();
+        lblTempoTotalVagaInfo = new javax.swing.JLabel();
         rdbLivre = new javax.swing.JRadioButton();
         rdbOcupada = new javax.swing.JRadioButton();
         rdbTodas = new javax.swing.JRadioButton();
@@ -757,6 +764,14 @@ public class Principal extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        tblVagas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblVagasMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                tblVagasMouseEntered(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblVagas);
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -779,17 +794,17 @@ public class Principal extends javax.swing.JFrame {
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Informações da vaga"));
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel9.setText("Quantidade de operações:");
+        lblVaga4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblVaga4.setText("Quantidade de operações:");
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel10.setText("Valor total:");
+        lblvaga1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblvaga1.setText("Valor total:");
 
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel11.setText("Tempo total ocupada:");
+        lblVaga3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblVaga3.setText("Tempo total ocupada:");
 
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel12.setText("Código da vaga:");
+        lblVaga2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblVaga2.setText("Código da vaga:");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -798,23 +813,45 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel12))
-                .addContainerGap(198, Short.MAX_VALUE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(lblvaga1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblValTotalVagaInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(lblVaga2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblCodVagaInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(lblVaga4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblQtdOpVagaInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(lblVaga3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblTempoTotalVagaInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(94, 94, 94))))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jLabel12)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblVaga2)
+                    .addComponent(lblCodVagaInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblQtdOpVagaInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblVaga4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel10)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblvaga1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblValTotalVagaInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel11)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblVaga3)
+                    .addComponent(lblTempoTotalVagaInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14))
         );
 
@@ -854,7 +891,7 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 266, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 290, Short.MAX_VALUE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
@@ -1217,6 +1254,27 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tblOperacaoMouseClicked
 
+    private void tblVagasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVagasMouseClicked
+       linhaSelecionada = tblVagas.getSelectedRow();
+       
+       
+       
+       
+       if(linhaSelecionada > -1){
+           int id = (int) tblVagas.getValueAt(linhaSelecionada, 0);
+           EstatisticaVaga ev = vgDAO.vwInfoVaga(id);
+           
+           lblCodVagaInfo.setText(String.valueOf(id));
+           lblQtdOpVagaInfo.setText(String.valueOf(ev.getQtd()));
+           lblValTotalVagaInfo.setText(String.format("R$ %.2f", ev.getValor()));
+           lblTempoTotalVagaInfo.setText(ev.getTempoFormatado());
+       }
+    }//GEN-LAST:event_tblVagasMouseClicked
+
+    private void tblVagasMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVagasMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblVagasMouseEntered
+
     /**
      * @param args the command line arguments
      */
@@ -1274,15 +1332,11 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton btnSalvarCadastroVeiculo;
     private javax.swing.JComboBox<Vaga> cbxVagas;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
@@ -1295,11 +1349,19 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JLabel lblBuscarVeiculo;
+    private javax.swing.JLabel lblCodVagaInfo;
     private javax.swing.JLabel lblDadosCodigo;
     private javax.swing.JLabel lblDadosCodigoOp;
     private javax.swing.JLabel lblDadosEntrada;
     private javax.swing.JLabel lblDadosSaida;
     private javax.swing.JLabel lblDadosValorTotal;
+    private javax.swing.JLabel lblQtdOpVagaInfo;
+    private javax.swing.JLabel lblTempoTotalVagaInfo;
+    private javax.swing.JLabel lblVaga2;
+    private javax.swing.JLabel lblVaga3;
+    private javax.swing.JLabel lblVaga4;
+    private javax.swing.JLabel lblValTotalVagaInfo;
+    private javax.swing.JLabel lblvaga1;
     private javax.swing.JLabel lvl;
     private javax.swing.JRadioButton rdbLivre;
     private javax.swing.JRadioButton rdbOcupada;
@@ -1483,36 +1545,36 @@ private void atualizarTabelaVagas(String buscaId) {
 
 private void atualizarPainelDadosOperacao(Operacao op) {
     
-    if (op == null) {
-        lblDadosCodigo.setText("-");
-        lblDadosCodigoOp.setText("-");
-        lblDadosEntrada.setText("-");
-        lblDadosSaida.setText("-");
-        lblDadosValorTotal.setText("-");
-        return;
-    }
+        if (op == null) {
+            lblDadosCodigo.setText("-");
+            lblDadosCodigoOp.setText("-");
+            lblDadosEntrada.setText("-");
+            lblDadosSaida.setText("-");
+            lblDadosValorTotal.setText("-");
+            return;
+        }
 
-    java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    if (op.getVaga() != null) {
-        lblDadosCodigo.setText(String.valueOf(op.getVaga().getId()));
-    }
+        if (op.getVaga() != null) {
+            lblDadosCodigo.setText(String.valueOf(op.getVaga().getId()));
+        }
     
-    lblDadosCodigoOp.setText(String.valueOf(op.getId_operacao()));
+                lblDadosCodigoOp.setText(String.valueOf(op.getId_operacao()));
     
-    if (op.getHorarioEntrada() != null) {
-        lblDadosEntrada.setText(op.getHorarioEntrada().format(dtf));
-    }
+        if (op.getHorarioEntrada() != null) {
+            lblDadosEntrada.setText(op.getHorarioEntrada().format(dtf));
+        }
 
  
-    if (op.getHorarioSaida() == null) {
-        lblDadosSaida.setText("Em andamento...");
-        lblDadosValorTotal.setText("..."); 
-    } else {
+        if (op.getHorarioSaida() == null) {
+            lblDadosSaida.setText("Em andamento...");
+            lblDadosValorTotal.setText("..."); 
+        }else {
  
-        lblDadosSaida.setText(op.getHorarioSaida().format(dtf));
-        lblDadosValorTotal.setText(String.format("R$ %.2f", op.getValorTotal()));
+            lblDadosSaida.setText(op.getHorarioSaida().format(dtf));
+            lblDadosValorTotal.setText(String.format("R$ %.2f", op.getValorTotal()));
+        }
     }
-}
 
 }

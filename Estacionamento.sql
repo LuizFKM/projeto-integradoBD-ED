@@ -66,7 +66,7 @@ FOR EACH ROW
 EXECUTE FUNCTION fn_atualizar_status_da_vaga();
 
 CREATE OR REPLACE FUNCTION fn_bloquear_vaga_ocupada()
-RETURN TRIGGER AS $$
+RETURNS TRIGGER AS $$
 BEGIN
 	IF EXISTS(SELECT 1 FROM vaga WHERE id_vaga = NEW.id_vaga AND status = true) THEN
 		RAISE EXCEPTION 'A vaga % já está ocupada!', NEW.id_vaga;
@@ -77,9 +77,21 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER tr_impedir_duplicidade_vaga
-BEFORE INSER ON operacao
+BEFORE INSERT ON operacao
 FOR EACH ROW
 EXECUTE FUNCTION fn_bloquear_vaga_ocupada();
+
+CREATE OR REPLACE VIEW vw_informacoes_vaga AS SELECT v.id_vaga, 
+	COUNT(o.id_operacao) AS quantidade_operacoes,
+	SUM(o.valor_total) AS valor_total_acumulado,
+	CAST(SUM(o.horario_saida - o.horario_entrada) AS INTERVAL(0)) AS tempo_total_acumulado
+FROM vaga AS v
+LEFT JOIN operacao AS o ON v.id_vaga = o.id_vaga
+GROUP BY v.id_vaga
+ORDER BY v.id_vaga;
+
+SELECT * FROM vw_informacoes_vaga;
+	
 	
 
 INSERT INTO vaga (status) VALUES (false); 
