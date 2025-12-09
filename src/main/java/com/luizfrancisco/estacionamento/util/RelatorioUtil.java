@@ -13,37 +13,55 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.InputStream;
 import net.sf.jasperreports.engine.JasperExportManager;
+import javax.swing.UIManager; 
+import net.sf.jasperreports.view.JasperViewer; 
 
 /**
  *
  * @author npc12
  */
 public class RelatorioUtil {
-    
 
-    public static void abrirPDF(String caminho, Map<String, Object> parametros, Connection con) {
+
+
+public static void abrirPDF(String caminho, Map<String, Object> parametros, Connection con) {
     try {
-      
         InputStream reportStream = RelatorioUtil.class.getResourceAsStream(caminho);
-
         if (reportStream == null) {
-            System.out.println("ERRO CRÍTICO: Não achei o arquivo .jasper em: " + caminho);
+            System.out.println("ERRO: Arquivo .jasper não encontrado: " + caminho);
             return;
         }
 
         JasperReport relatorio = (JasperReport) JRLoader.loadObject(reportStream);
-
         JasperPrint print = JasperFillManager.fillReport(relatorio, parametros, con);
 
         if (print.getPages().isEmpty()) {
-            System.out.println("ALERTA: O relatório foi gerado com 0 páginas (Dados vazios?).");
+            javax.swing.JOptionPane.showMessageDialog(null, "O relatório não retornou dados.");
+            return;
         }
-  
-        File pdfTemp = File.createTempFile("relatorio_final", ".pdf");
-        JasperExportManager.exportReportToPdfFile(print, pdfTemp.getAbsolutePath());
-        Desktop.getDesktop().open(pdfTemp);
+
+        // --- CORREÇÃO PARA LINUX (POP!_OS / UBUNTU) ---
+        // Isso resolve o erro "GLib-GIO-CRITICAL" e o travamento visual.
+        // Forçamos o Java a usar o visual padrão (Metal) em vez do GTK do Linux.
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // ----------------------------------------------
+
+        // Abre a janela interna do Jasper
+        // 'false' significa que fechar o relatório NÃO fecha o sistema todo
+        JasperViewer view = new JasperViewer(print, false);
+        view.setTitle("Relatório de Estacionamento");
+        view.setVisible(true);
+        view.toFront(); // Traz a janela para frente
+
     } catch (Exception e) {
         e.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(null, "Erro ao gerar relatório: " + e.getMessage());
     }
 }
+
+ 
 }

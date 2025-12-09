@@ -264,7 +264,15 @@ public class Principal extends javax.swing.JFrame {
             new String [] {
                 "Id", "Nome completo", "Email", "Telefone"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblClientesPrincipal.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblClientesPrincipalMouseClicked(evt);
@@ -422,20 +430,21 @@ public class Principal extends javax.swing.JFrame {
             new String [] {
                 "ID", "Placa", "Modelo", "Cor", "Nome Cliente"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tblCadastroVeiculos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblCadastroVeiculosMouseClicked(evt);
             }
         });
         jScrollPane3.setViewportView(tblCadastroVeiculos);
-        if (tblCadastroVeiculos.getColumnModel().getColumnCount() > 0) {
-            tblCadastroVeiculos.getColumnModel().getColumn(0).setResizable(false);
-            tblCadastroVeiculos.getColumnModel().getColumn(1).setResizable(false);
-            tblCadastroVeiculos.getColumnModel().getColumn(2).setResizable(false);
-            tblCadastroVeiculos.getColumnModel().getColumn(3).setResizable(false);
-            tblCadastroVeiculos.getColumnModel().getColumn(4).setResizable(false);
-        }
 
         javax.swing.GroupLayout VeiculoLayout = new javax.swing.GroupLayout(Veiculo);
         Veiculo.setLayout(VeiculoLayout);
@@ -723,7 +732,7 @@ public class Principal extends javax.swing.JFrame {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, true, false, false, false, true
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -736,9 +745,6 @@ public class Principal extends javax.swing.JFrame {
             }
         });
         jScrollPane5.setViewportView(tblOperacao);
-        if (tblOperacao.getColumnModel().getColumnCount() > 0) {
-            tblOperacao.getColumnModel().getColumn(1).setResizable(false);
-        }
 
         javax.swing.GroupLayout OperacionalLayout = new javax.swing.GroupLayout(Operacional);
         Operacional.setLayout(OperacionalLayout);
@@ -774,9 +780,16 @@ public class Principal extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         tblVagas.addMouseListener(new java.awt.event.MouseAdapter() {
