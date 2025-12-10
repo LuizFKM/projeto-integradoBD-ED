@@ -14,6 +14,6 @@ import com.luizfrancisco.estacionamento.view.Principal;
 public class Estacionamento {
 
     public static void main(String[] args) {
-        new Login().setVisible(true);
+        new Principal().setVisible(true);
     }
 }

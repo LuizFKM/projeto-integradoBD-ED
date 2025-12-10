@@ -4,9 +4,6 @@
  */
 package com.luizfrancisco.estacionamento.view;
 
-import com.luizfrancisco.estacionamento.dao.UsuarioDAO;
-import javax.swing.JOptionPane;
-
 /**
  *
  * @author npc12
@@ -18,8 +15,6 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
-        setLocationRelativeTo(this);
-        setResizable(false); 
     }
 
     /**
@@ -35,6 +30,7 @@ public class Login extends javax.swing.JFrame {
         txtEmail = new javax.swing.JTextField();
         pswSenha = new javax.swing.JPasswordField();
         btnEntrar = new javax.swing.JButton();
+        lblCliqueAqui = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -46,6 +42,13 @@ public class Login extends javax.swing.JFrame {
         btnEntrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEntrarActionPerformed(evt);
+            }
+        });
+
+        lblCliqueAqui.setText("Clique aqui para cadastrar um novo usuário");
+        lblCliqueAqui.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblCliqueAquiMouseClicked(evt);
             }
         });
 
@@ -61,13 +64,14 @@ public class Login extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(50, 50, 50)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnEntrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+                            .addComponent(lblCliqueAqui, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEntrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(pswSenha)
                             .addComponent(txtEmail)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(141, 141, 141)
                         .addComponent(jLabel2)))
-                .addContainerGap(61, Short.MAX_VALUE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -80,7 +84,9 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(pswSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnEntrar)
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addComponent(lblCliqueAqui)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -98,36 +104,12 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-    String login = txtEmail.getText();
-    char[] senha = pswSenha.getPassword();
 
-    UsuarioDAO dao = new UsuarioDAO();
-    // Recebe a String do perfil: "Administrador", "Usuário", ou null
-    String perfil = dao.autenticarUsuario(login, senha); 
-
-    // Lógica de filtro e redirecionamento
-    if (perfil != null) {
-        // 1. Autenticação bem-sucedida
-        
-        // 2. Cria a instância da tela principal
-        com.luizfrancisco.estacionamento.view.Principal telaPrincipal = 
-                new com.luizfrancisco.estacionamento.view.Principal();
-        
-        // 3. Configura o acesso com base na String do perfil
-        boolean isAdmin = "Administrador".equalsIgnoreCase(perfil);
-        telaPrincipal.configurarAcesso(isAdmin); 
-        
-        // 4. Torna a tela visível
-        telaPrincipal.setVisible(true);
-        
-        // 5. Fecha a tela de login
-        this.dispose(); 
-        
-    } else {
-        // Autenticação falhou: perfil é null
-        javax.swing.JOptionPane.showMessageDialog(null, "Login ou Senha incorretos. Tente novamente.");
-    }
     }//GEN-LAST:event_btnEntrarActionPerformed
+
+    private void lblCliqueAquiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCliqueAquiMouseClicked
+
+    }//GEN-LAST:event_lblCliqueAquiMouseClicked
 
     /**
      * @param args the command line arguments
@@ -168,6 +150,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton btnEntrar;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel lblCliqueAqui;
     private javax.swing.JPasswordField pswSenha;
     private javax.swing.JTextField txtEmail;
     // End of variables declaration//GEN-END:variables
