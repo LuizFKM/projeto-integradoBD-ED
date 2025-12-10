@@ -4,6 +4,9 @@
  */
 package com.luizfrancisco.estacionamento.view;
 
+import com.luizfrancisco.estacionamento.controller.UsuarioController;
+import com.luizfrancisco.estacionamento.model.Usuario;
+import javax.swing.JOptionPane;
 /**
  *
  * @author npc12
@@ -15,6 +18,8 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        setLocationRelativeTo(this);
+        setResizable(false); 
     }
 
     /**
@@ -27,7 +32,7 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        txtEmail = new javax.swing.JTextField();
+        txtLogin = new javax.swing.JTextField();
         pswSenha = new javax.swing.JPasswordField();
         btnEntrar = new javax.swing.JButton();
         lblCliqueAqui = new javax.swing.JLabel();
@@ -67,11 +72,11 @@ public class Login extends javax.swing.JFrame {
                             .addComponent(lblCliqueAqui, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnEntrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(pswSenha)
-                            .addComponent(txtEmail)))
+                            .addComponent(txtLogin)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(141, 141, 141)
                         .addComponent(jLabel2)))
-                .addContainerGap(50, Short.MAX_VALUE))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -79,14 +84,14 @@ public class Login extends javax.swing.JFrame {
                 .addGap(44, 44, 44)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
-                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pswSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnEntrar)
                 .addGap(30, 30, 30)
                 .addComponent(lblCliqueAqui)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -104,7 +109,19 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-
+        String login = txtLogin.getText();
+        String senha = new String(pswSenha.getPassword());
+        
+        UsuarioController uc = new UsuarioController();
+        Usuario usuarioLogado = uc.realizarLogin(login, senha);
+        
+        if(usuarioLogado != null){
+            Principal p = new Principal(usuarioLogado); 
+            p.setVisible(true);
+            this.dispose();
+        }else{
+            JOptionPane.showMessageDialog(this, "Acesso negado.");
+        }
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     private void lblCliqueAquiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCliqueAquiMouseClicked
@@ -152,6 +169,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblCliqueAqui;
     private javax.swing.JPasswordField pswSenha;
-    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtLogin;
     // End of variables declaration//GEN-END:variables
 }

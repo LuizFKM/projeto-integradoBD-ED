@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import com.luizfrancisco.estacionamento.model.EstatisticaVaga;
+import com.luizfrancisco.estacionamento.model.Usuario;
 import com.luizfrancisco.estacionamento.util.ValidadorDeCampos;
 import java.awt.Color;
 
@@ -40,11 +41,28 @@ public class Principal extends javax.swing.JFrame {
     private final VagaController vgc = new VagaController();
     private final OperacaoController oc = new OperacaoController();
     
-
+    private Usuario usuarioLogado;
     
     
     public Principal() {
         initComponents();
+        iniciarConfiguracoes();
+        setLocationRelativeTo(this);
+        setResizable(false); 
+    }
+    
+    public Principal(Usuario usuario) {
+        initComponents(); 
+        
+        this.usuarioLogado = usuario; 
+        
+        iniciarConfiguracoes(); 
+        
+        this.setExtendedState(MAXIMIZED_BOTH); 
+        verificarPermissoes(); 
+    }
+    
+    private void iniciarConfiguracoes() {
         txtValorHora.setText("R$ 0,00");
         atualizarTabelaClientes("");
         atualizarTabelaVeiculos("");
@@ -52,13 +70,27 @@ public class Principal extends javax.swing.JFrame {
         atualizarTabelaOperacoes("");
         configurarListeners();
         preencheCbxVaga();
-        setLocationRelativeTo(this);
-        setResizable(false); 
         
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosed(java.awt.event.WindowEvent e) { 
+             new Login().setVisible(true);;
+        }
+    });
     }
     
- 
-
+    private void verificarPermissoes() {
+        
+        
+        
+        if (this.usuarioLogado != null && this.usuarioLogado.getRole().equalsIgnoreCase("colaborador")) {
+            btnDeletarVeiculo.setEnabled(false);
+            btnDeletarCliente.setEnabled(false);
+            btnDeletarOp.setEnabled(false);
+        } 
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -76,7 +108,7 @@ public class Principal extends javax.swing.JFrame {
         txtEmailClienteCadastro = new javax.swing.JTextField();
         txtTelefoneClienteCadastro = new javax.swing.JTextField();
         btnSalvarCadastroCliente = new javax.swing.JButton();
-        btnSalvarCadastroCliente1 = new javax.swing.JButton();
+        btnDeletarCliente = new javax.swing.JButton();
         txtBuscarCliente = new javax.swing.JTextField();
         btnBuscarCliente = new javax.swing.JButton();
         btnLimparCliente = new javax.swing.JButton();
@@ -102,7 +134,7 @@ public class Principal extends javax.swing.JFrame {
         txtCorOp = new javax.swing.JTextField();
         txtModeloOp = new javax.swing.JTextField();
         btnSalvarCadastroOperacao = new javax.swing.JButton();
-        btnSalvarCadastroCliente10 = new javax.swing.JButton();
+        btnDeletarOp = new javax.swing.JButton();
         lblBuscarVeiculo = new javax.swing.JLabel();
         txtNomeClienteOp = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
@@ -165,10 +197,10 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        btnSalvarCadastroCliente1.setText("Deletar");
-        btnSalvarCadastroCliente1.addActionListener(new java.awt.event.ActionListener() {
+        btnDeletarCliente.setText("Deletar");
+        btnDeletarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarCadastroCliente1ActionPerformed(evt);
+                btnDeletarClienteActionPerformed(evt);
             }
         });
 
@@ -218,7 +250,7 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addComponent(btnSalvarCadastroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(btnSalvarCadastroCliente1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnDeletarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(15, 15, 15)
                         .addComponent(btnLimparCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 162, Short.MAX_VALUE))
@@ -234,7 +266,7 @@ public class Principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvarCadastroCliente)
-                    .addComponent(btnSalvarCadastroCliente1)
+                    .addComponent(btnDeletarCliente)
                     .addComponent(btnLimparCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -484,10 +516,10 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        btnSalvarCadastroCliente10.setText("Deletar");
-        btnSalvarCadastroCliente10.addActionListener(new java.awt.event.ActionListener() {
+        btnDeletarOp.setText("Deletar");
+        btnDeletarOp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarCadastroCliente10ActionPerformed(evt);
+                btnDeletarOpActionPerformed(evt);
             }
         });
 
@@ -673,7 +705,7 @@ public class Principal extends javax.swing.JFrame {
                                     .addGroup(jPanel13Layout.createSequentialGroup()
                                         .addComponent(btnSalvarCadastroOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnSalvarCadastroCliente10, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnDeletarOp, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnLimparOp, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
@@ -708,7 +740,7 @@ public class Principal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnSalvarCadastroOperacao)
-                            .addComponent(btnSalvarCadastroCliente10)
+                            .addComponent(btnDeletarOp)
                             .addComponent(btnLimparOp))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -988,7 +1020,7 @@ public class Principal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSalvarCadastroCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarCadastroCliente1ActionPerformed
+    private void btnDeletarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarClienteActionPerformed
 
     linhaSelecionada = tblClientesPrincipal.getSelectedRow(); 
 
@@ -1023,7 +1055,7 @@ public class Principal extends javax.swing.JFrame {
             }
         }
     }        
-    }//GEN-LAST:event_btnSalvarCadastroCliente1ActionPerformed
+    }//GEN-LAST:event_btnDeletarClienteActionPerformed
 
     private void txtCorVeiculoCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorVeiculoCadastroActionPerformed
         // TODO add your handling code here:
@@ -1369,7 +1401,7 @@ public class Principal extends javax.swing.JFrame {
         gerarRelatorio("relatorio_estacionamento");
     }//GEN-LAST:event_btnImprimirRelatorioActionPerformed
 
-    private void btnSalvarCadastroCliente10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarCadastroCliente10ActionPerformed
+    private void btnDeletarOpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarOpActionPerformed
        linhaSelecionada = tblOperacao.getSelectedRow();
        
        try{
@@ -1390,7 +1422,7 @@ public class Principal extends javax.swing.JFrame {
        }catch(Exception e){
            System.out.println("ERRO -> " + e);
        }
-    }//GEN-LAST:event_btnSalvarCadastroCliente10ActionPerformed
+    }//GEN-LAST:event_btnDeletarOpActionPerformed
 
     private void btnLimparClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparClienteActionPerformed
        limparCamposCliente();
@@ -1450,6 +1482,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscarOp;
     private javax.swing.JButton btnBuscarVaga;
     private javax.swing.JButton btnBuscarVeiculo;
+    private javax.swing.JButton btnDeletarCliente;
+    private javax.swing.JButton btnDeletarOp;
     private javax.swing.JButton btnDeletarVeiculo;
     private javax.swing.JButton btnFinalizarOp;
     private javax.swing.JToggleButton btnImprimirRelatorio;
@@ -1457,8 +1491,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton btnLimparOp;
     private javax.swing.JButton btnLimparVeiculo;
     private javax.swing.JButton btnSalvarCadastroCliente;
-    private javax.swing.JButton btnSalvarCadastroCliente1;
-    private javax.swing.JButton btnSalvarCadastroCliente10;
     private javax.swing.JButton btnSalvarCadastroOperacao;
     private javax.swing.JButton btnSalvarCadastroVeiculo;
     private javax.swing.JComboBox<Vaga> cbxVagas;

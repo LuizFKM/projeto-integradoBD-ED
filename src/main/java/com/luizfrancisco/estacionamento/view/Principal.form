@@ -109,7 +109,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="btnSalvarCadastroCliente" min="-2" pref="100" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="btnSalvarCadastroCliente1" min="-2" pref="100" max="-2" attributes="0"/>
+                                  <Component id="btnDeletarCliente" min="-2" pref="100" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                                   <Component id="btnLimparCliente" min="-2" pref="90" max="-2" attributes="0"/>
                               </Group>
@@ -130,7 +130,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="btnSalvarCadastroCliente" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnSalvarCadastroCliente1" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnDeletarCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnLimparCliente" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="24" max="32767" attributes="0"/>
@@ -178,12 +178,12 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalvarCadastroClienteActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnSalvarCadastroCliente1">
+                <Component class="javax.swing.JButton" name="btnDeletarCliente">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Deletar"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalvarCadastroCliente1ActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeletarClienteActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtBuscarCliente">
@@ -623,7 +623,7 @@
                                               <Group type="102" alignment="0" attributes="0">
                                                   <Component id="btnSalvarCadastroOperacao" min="-2" pref="100" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="btnSalvarCadastroCliente10" min="-2" pref="100" max="-2" attributes="0"/>
+                                                  <Component id="btnDeletarOp" min="-2" pref="100" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
                                                   <Component id="btnLimparOp" min="-2" pref="97" max="-2" attributes="0"/>
                                               </Group>
@@ -672,7 +672,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="btnSalvarCadastroOperacao" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="btnSalvarCadastroCliente10" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnDeletarOp" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="btnLimparOp" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
@@ -734,12 +734,12 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalvarCadastroOperacaoActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="btnSalvarCadastroCliente10">
+                <Component class="javax.swing.JButton" name="btnDeletarOp">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Deletar"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSalvarCadastroCliente10ActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeletarOpActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblBuscarVeiculo">
