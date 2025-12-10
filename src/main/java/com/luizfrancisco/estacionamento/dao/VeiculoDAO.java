@@ -93,6 +93,29 @@ public void deletar(int id) {
         throw new RuntimeException("Erro ao deletar veículo. Verifique se existem operações vinculadas.", e);
     }
 }
+
+public void atualizar(int id, Veiculo v)throws SQLException {
+    String sql = "UPDATE veiculo SET modelo = ?, cor = ?, placa = ?, id_cliente = ? WHERE id_veiculo = ?";
+    
+    try (Connection con = Conexao.getConnection(); 
+         PreparedStatement ps = con.prepareStatement(sql)) {
+            
+            ps.setString(1, v.getModelo());
+            ps.setString(2, v.getCor());
+            ps.setString(3, v.getPlaca());
+            ps.setInt(4, v.getCliente().getId());
+            ps.setInt(5, id);
+            
+            int linhasAfetadas = ps.executeUpdate();
+            
+            if(linhasAfetadas == 0){
+                throw new SQLException("Nenhum veículo encontrado com o ID: " + id);
+            }
+        }
+    
+    
+}
+        
 public List<Veiculo> buscar(String termoBusca) {
         List<Veiculo> listaVeiculos = new ArrayList<>();
         
@@ -107,8 +130,8 @@ public List<Veiculo> buscar(String termoBusca) {
                      OR LOWER(c.nome) LIKE LOWER(?)
                      """;
 
-        try (java.sql.Connection con = com.luizfrancisco.estacionamento.database.Conexao.getConnection();
-             java.sql.PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = Conexao.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             String param = "%" + termoBusca + "%";
           
@@ -118,15 +141,15 @@ public List<Veiculo> buscar(String termoBusca) {
             ps.setString(4, param);
             ps.setString(5, param);
 
-            try (java.sql.ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    com.luizfrancisco.estacionamento.model.Veiculo v = new com.luizfrancisco.estacionamento.model.Veiculo();
+                    Veiculo v = new Veiculo();
                     v.setId(rs.getInt("id_veiculo"));
                     v.setModelo(rs.getString("modelo"));
                     v.setCor(rs.getString("cor"));
                     v.setPlaca(rs.getString("placa"));
 
-                    com.luizfrancisco.estacionamento.model.Cliente c = new com.luizfrancisco.estacionamento.model.Cliente();
+                    Cliente c = new Cliente();
                     c.setId(rs.getInt("id_cliente"));
                     c.setNome(rs.getString("nome"));
                     c.setEmail(rs.getString("email"));
@@ -136,7 +159,7 @@ public List<Veiculo> buscar(String termoBusca) {
                 }
             }
 
-        } catch (java.sql.SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Erro ao buscar veículo: " + e);
         }
         return listaVeiculos;

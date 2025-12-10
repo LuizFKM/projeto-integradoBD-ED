@@ -5,6 +5,7 @@
 package com.luizfrancisco.estacionamento.controller;
 
 import com.luizfrancisco.estacionamento.dao.VagaDAO;
+import com.luizfrancisco.estacionamento.model.EstatisticaVaga;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import com.luizfrancisco.estacionamento.model.Vaga;
@@ -27,6 +28,22 @@ public class VagaController {
         
         return dao.buscar(termo, filtroStatus);
     }
+    
+    public List<Vaga> listarVagas() {
+    return dao.listarVagas();
+}
+    
+    public EstatisticaVaga estatisticasVaga(int id) {
+    try {
+        if (id > 0) {
+            return dao.vwInfoVaga(id);
+        }
+    } catch (Exception e) {
+        e.printStackTrace(); 
+        System.out.println("Erro ao buscar estatísticas: " + e.getMessage());
+    }
+    return null;
+}
     
     
 }

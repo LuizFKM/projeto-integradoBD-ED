@@ -21,6 +21,42 @@ public class VeiculoController {
     public VeiculoController(){
         this.dao = new VeiculoDAO();
     }
+    
+    public void cadastrarVeiculo(Veiculo veiculo){
+        try{
+            if(veiculo != null){
+                dao.inserir(veiculo);
+            }else{
+                System.out.println("veiculo null");
+            }
+        }catch(Exception e){
+            System.out.println("ERRO ao inserir veiculo -> " + e);
+        }
+    }
+    
+    public void atualizarVeiculo(int id, Veiculo v){
+        try{
+            if(id > 0 && v != null){
+                dao.atualizar(id, v);
+            }else{
+                System.out.println("veiculo invalido");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    
+    public void deletarVeiculo(int id){
+        try{
+            if(id > 0){
+                dao.deletar(id);
+            }else{
+                System.out.println("veiculo invalido");
+            }
+        }catch(Exception e){
+            System.out.println("ERRO ao deletar veiculo -> " + e);
+        }
+    }
 
     public List<Veiculo> filtrarVeiculos(String busca){
         String buscaTermo = busca.trim();

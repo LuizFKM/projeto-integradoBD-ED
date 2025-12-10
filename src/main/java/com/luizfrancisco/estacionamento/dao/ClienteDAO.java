@@ -107,4 +107,22 @@ public List<Cliente> buscar(String nomeOuCodigo){
     }
     return lista;
     }
+
+ public void atualizar(int id, Cliente c){
+        String sql = "UPDATE cliente SET nome = ?, telefone = ?, email = ? WHERE id_cliente = ?";
+        
+        try(Connection con = Conexao.getConnection(); 
+                PreparedStatement ps = con.prepareStatement(sql)){
+            
+            ps.setString(1, c.getNome());
+            ps.setString(2, c.getTelefone());
+            ps.setString(3, c.getEmail());
+            ps.setInt(4, id);
+            ps.executeUpdate();
+            
+        }catch(SQLException e){
+            System.out.println("ERRO ao editar cliente -> " + e);
+            e.printStackTrace();
+        }
+    }
 }

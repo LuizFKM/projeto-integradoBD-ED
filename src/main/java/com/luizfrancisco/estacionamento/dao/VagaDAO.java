@@ -80,7 +80,7 @@ public class VagaDAO {
         return listaVagas;
     }
 
-   public EstatisticaVaga vwInfoVaga(int idVaga){
+   public EstatisticaVaga vwInfoVaga(int idVaga) throws SQLException {
        String sql = "SELECT * FROM vw_informacoes_vaga WHERE id_vaga = ?";
        
        EstatisticaVaga ev = new EstatisticaVaga();
@@ -107,8 +107,6 @@ public class VagaDAO {
                }
            }
         
-       }catch(SQLException e){
-           System.out.println("Erro ao buscar estatísticas da vaga: " + e);
        }
        return ev;
        

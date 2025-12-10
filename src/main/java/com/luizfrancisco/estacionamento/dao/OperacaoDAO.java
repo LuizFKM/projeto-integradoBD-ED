@@ -15,7 +15,6 @@ import java.util.List;
 import com.luizfrancisco.estacionamento.model.Cliente;
 import com.luizfrancisco.estacionamento.model.Veiculo;
 import com.luizfrancisco.estacionamento.model.Vaga;
-import javax.swing.SpringLayout;
 /**
  *
  * @author luizfkm
@@ -71,6 +70,23 @@ public class OperacaoDAO {
         }
     }
     
+    public void atualizarOperacao(int id, Operacao op) throws SQLException {
+        String sql = "UPDATE operacao SET id_veiculo = ?, id_vaga = ?, horario_entrada = ?, valor_hora = ? WHERE id_operacao = ?";
+        
+        try(Connection con = Conexao.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)){
+            ps.setInt(1, op.getVeiculo().getId());
+            ps.setInt(2, op.getVaga().getId());
+            ps.setTimestamp(3, Timestamp.valueOf(op.getHorarioEntrada()));
+            ps.setDouble(4, op.getValorHora());
+            ps.setInt(5, id);
+            
+            ps.executeUpdate();
+            
+        }
+    
+    }
+       
     public List<Operacao> listarOperacao(){
         List<Operacao> lista = new ArrayList<>();
         
@@ -100,7 +116,7 @@ public class OperacaoDAO {
                 operacao.setId_operacao(rs.getInt("id_operacao"));
                 operacao.setHorarioEntrada(rs.getTimestamp("horario_entrada").toLocalDateTime());
     
-                java.sql.Timestamp tsSaida = rs.getTimestamp("horario_saida");
+                Timestamp tsSaida = rs.getTimestamp("horario_saida");
                 if (tsSaida != null) {
                     operacao.setHorarioSaida(tsSaida.toLocalDateTime());
                     operacao.setValorTotal(rs.getDouble("valor_total"));
@@ -152,31 +168,28 @@ public class OperacaoDAO {
         if (rs.next()) {
             op.setId_operacao(rs.getInt("id_operacao"));
             
-            // --- 1. Monta o CLIENTE ---
+           
             Cliente cliente = new Cliente();
             cliente.setId(rs.getInt("id_cliente"));
             cliente.setNome(rs.getString("nome"));
-            // Se tiver telefone ou cpf, adicione aqui: cliente.setCpf(rs.getString("cpf"));
+           
 
-            // --- 2. Monta o VEÍCULO e coloca o CLIENTE dentro ---
             Veiculo veiculo = new Veiculo();
             veiculo.setId(rs.getInt("id_veiculo")); 
             veiculo.setPlaca(rs.getString("placa")); 
             veiculo.setModelo(rs.getString("modelo")); 
             veiculo.setCor(rs.getString("cor"));
             
-            veiculo.setCliente(cliente); // <--- AQUI ESTAVA FALTANDO!
+            veiculo.setCliente(cliente); 
             
             op.setVeiculo(veiculo); 
-            // ----------------------------------------------
-
-            // --- 3. Monta a VAGA ---
+   
             Vaga v = new Vaga();
             v.setId(rs.getInt("id_vaga"));
             v.setStatus(rs.getBoolean("status_vaga"));
             op.setVaga(v);
 
-            // --- 4. Monta os HORÁRIOS ---
+          
             Timestamp tsEntrada = rs.getTimestamp("horario_entrada");
             if (tsEntrada != null) {
                 op.setHorarioEntrada(tsEntrada.toLocalDateTime());
