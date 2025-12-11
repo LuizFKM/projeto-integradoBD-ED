@@ -21,7 +21,7 @@ import com.luizfrancisco.estacionamento.model.Vaga;
  */
 public class OperacaoDAO {
     
-    public void inserirEntrada(Operacao o){
+    public void inserirEntrada(Operacao o)throws SQLException{
         String sql = "INSERT INTO operacao (horario_entrada, id_veiculo, id_vaga, valor_hora)"
                 + "VALUES (?, ?, ?, ?)";
         
@@ -35,8 +35,6 @@ public class OperacaoDAO {
                     ps.executeUpdate();
             
         
-        }catch(SQLException e){
-            System.out.println("ERRO ao registrar entrada ->" + e);
         }
     }
     
@@ -269,28 +267,22 @@ public List<Operacao> buscar(String termoBusca) {
         return lista;
     }
 
-    public boolean verificaVeiculoEstacionado(String placaDoVeiculo){
-        String sql = "SELECT COUNT(*) " +
-                 "FROM operacao o " +
+    public boolean verificaVeiculoEstacionado(String placaDoVeiculo) throws SQLException {
+    String sql = "SELECT COUNT(*) FROM operacao o " +
                  "INNER JOIN veiculo v ON o.id_veiculo = v.id_veiculo " +
-                 "WHERE v.placa = ? AND o.horario_saida IS NULL";
-        
-        boolean isEstacionado = false;
-        try(Connection con = Conexao.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql);){
-          
-            ps.setString(1, placaDoVeiculo);
-            
-            try(ResultSet rs = ps.executeQuery()){
-                if(rs.next()){
-                    isEstacionado = rs.getInt(1) > 0;
-                }
-            }
-        }catch(SQLException e){
-            System.out.println("ERRO ao verificar veículo estacionado -> " + e);
-        }
-        
-        return isEstacionado;
-    }
+                 "WHERE v.placa = ? AND o.horario_saida IS NULL"; 
+    try (Connection con = Conexao.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
 
+        ps.setString(1, placaDoVeiculo);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+    }
+    return false;
+}
+    
 }

@@ -110,7 +110,6 @@ public class Principal extends javax.swing.JFrame {
         btnSalvarCadastroCliente = new javax.swing.JButton();
         btnDeletarCliente = new javax.swing.JButton();
         txtBuscarCliente = new javax.swing.JTextField();
-        btnBuscarCliente = new javax.swing.JButton();
         btnLimparCliente = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         tblClientesPrincipal = new javax.swing.JTable();
@@ -216,13 +215,6 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        btnBuscarCliente.setText("Buscar");
-        btnBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarClienteActionPerformed(evt);
-            }
-        });
-
         btnLimparCliente.setText("Limpar");
         btnLimparCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -243,17 +235,14 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(txtTelefoneClienteCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(txtEmailClienteCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel9Layout.createSequentialGroup()
-                        .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addComponent(btnSalvarCadastroCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnDeletarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(15, 15, 15)
                         .addComponent(btnLimparCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 162, Short.MAX_VALUE))
+                .addGap(0, 212, Short.MAX_VALUE))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,9 +258,7 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(btnDeletarCliente)
                     .addComponent(btnLimparCliente))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscarCliente)))
+                .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         tblClientesPrincipal.setModel(new javax.swing.table.DefaultTableModel(
@@ -1223,31 +1210,18 @@ public class Principal extends javax.swing.JFrame {
         );
 
     } else {
-       
         int idVeiculo = (int) tblCadastroVeiculos.getValueAt(linhaVeiculo, 0);
-
-        int confirmacao = JOptionPane.showConfirmDialog(this, 
-                "Tem certeza que deseja excluir o veículo ID: " + idVeiculo + "?", 
-                "Confirmação", JOptionPane.YES_NO_OPTION);
-
-        if (confirmacao == JOptionPane.YES_OPTION) {
             try {
-
-                vc.deletarVeiculo(idVeiculo);
-                
-
+                vc.deletarVeiculo(idVeiculo);           
                 atualizarTabelaVeiculos("");
                 limparCamposVeiculo();
-
                 JOptionPane.showMessageDialog(this, "Veículo excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
-            } catch (RuntimeException e) {
-           
-                JOptionPane.showMessageDialog(this, 
-                        "Erro ao excluir. O veículo pode estar em uso.", 
-                        "Erro", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception e) {          
+                JOptionPane.showMessageDialog(this, "Erro ao excluir: " + e.getMessage(), "Erro",
+                        JOptionPane.ERROR_MESSAGE);
             }
-        }
+        
     }      
     }//GEN-LAST:event_btnDeletarVeiculoActionPerformed
 
@@ -1270,8 +1244,14 @@ public class Principal extends javax.swing.JFrame {
                     oc.atualizarOperacao(id, op);
                     JOptionPane.showMessageDialog(this, "Operação atualizada com sucesso!");
                 }else {
-                    oc.registrarEntrada(op);
-                    JOptionPane.showMessageDialog(this, "Veículo cadastrado com sucesso!");
+                    try{
+                        oc.registrarEntrada(op);
+                        JOptionPane.showMessageDialog(this, "Veículo cadastrado com sucesso!");
+                    }catch(Exception e){
+                        JOptionPane.showMessageDialog(this, e.getMessage(), "Aviso",
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
                 }
                 atualizarTabelaOperacoes("");
                 limparCamposOperacao();
@@ -1297,10 +1277,6 @@ public class Principal extends javax.swing.JFrame {
     private void txtBuscarVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarVeiculoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarVeiculoActionPerformed
-
-    private void btnBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarClienteActionPerformed
-    atualizarTabelaOperacoes(txtBuscarOperacao.getText());
-    }//GEN-LAST:event_btnBuscarClienteActionPerformed
 
     private void txtBuscarOperacaoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarOperacaoKeyPressed
     atualizarTabelaOperacoes(txtBuscarOperacao.getText());
@@ -1481,7 +1457,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTabbedPane Principal;
     private javax.swing.JPanel Vagas;
     private javax.swing.JPanel Veiculo;
-    private javax.swing.JButton btnBuscarCliente;
     private javax.swing.JButton btnBuscarOp;
     private javax.swing.JButton btnBuscarVaga;
     private javax.swing.JButton btnBuscarVeiculo;

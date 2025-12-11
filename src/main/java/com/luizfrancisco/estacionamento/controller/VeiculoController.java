@@ -46,16 +46,11 @@ public class VeiculoController {
         }
     }
     
-    public void deletarVeiculo(int id){
-        try{
-            if(id > 0){
-                dao.deletar(id);
-            }else{
-                System.out.println("veiculo invalido");
-            }
-        }catch(Exception e){
-            System.out.println("ERRO ao deletar veiculo -> " + e);
+    public void deletarVeiculo(int id)throws Exception {
+        if (id <= 0) {
+            throw new Exception("ID do cliente inválido para exclusão.");
         }
+        dao.deletar(id);
     }
 
     public List<Veiculo> filtrarVeiculos(String busca) throws Exception{

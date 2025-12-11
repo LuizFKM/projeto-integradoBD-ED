@@ -5,6 +5,7 @@
 package com.luizfrancisco.estacionamento.controller;
 import com.luizfrancisco.estacionamento.dao.OperacaoDAO;
 import com.luizfrancisco.estacionamento.model.Operacao;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import java.util.List;
@@ -77,14 +78,11 @@ public class OperacaoController {
         }
     }
     
-    public boolean verificaVeiculoEstacionado(String placaDoVeiculo) {
-    
-    if (placaDoVeiculo == null || placaDoVeiculo.trim().isEmpty()) {
-        return false;
+    private boolean verificaVeiculo(String placa)throws Exception{
+        try {
+            return dao.verificaVeiculoEstacionado(placa);
+        }catch (SQLException e) {
+            throw new Exception("Erro de sistema ao verificar disponibilidade do veículo.");
+        }
     }
-
-
-    return this.dao.verificaVeiculoEstacionado(placaDoVeiculo);
-}
-    
 }
