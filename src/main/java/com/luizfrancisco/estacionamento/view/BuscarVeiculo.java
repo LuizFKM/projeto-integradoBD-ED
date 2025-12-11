@@ -10,6 +10,7 @@ import com.luizfrancisco.estacionamento.dao.VeiculoDAO;
 import com.luizfrancisco.estacionamento.model.Veiculo;
 import com.luizfrancisco.estacionamento.model.Cliente;
 import java.util.List;
+import javax.swing.JOptionPane;
 /**
  *
  * @author npc12
@@ -214,16 +215,24 @@ private void atualizarTabela(String busca) {
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) tblBuscarVeiculos.getModel();
         model.setRowCount(0);
 
-        List<Veiculo> veiculos = vc.filtrarVeiculos(busca);
-       
-        for (Veiculo v : veiculos) {
-            model.addRow(new Object[]{
-                v.getId(),
-                v.getPlaca(),
-                v.getModelo(),
-                v.getCor(),
-                v.getCliente().getNome() 
-            });
+        try{
+            List<Veiculo> veiculos = vc.filtrarVeiculos(busca);
+            for (Veiculo v : veiculos) {
+                model.addRow(new Object[]{
+                    v.getId(),
+                    v.getPlaca(),
+                    v.getModelo(),
+                    v.getCor(),
+                    v.getCliente().getNome() 
+                });
+            }
+            
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, 
+            "Erro ao carregar dados do veículo: " + e.getMessage(),
+            "Erro", 
+            JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 }

@@ -58,7 +58,7 @@ public class Principal extends javax.swing.JFrame {
         
         iniciarConfiguracoes(); 
         
-        this.setExtendedState(MAXIMIZED_BOTH); 
+        this.setResizable(false);
         verificarPermissoes(); 
     }
     
@@ -1023,7 +1023,6 @@ public class Principal extends javax.swing.JFrame {
     private void btnDeletarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletarClienteActionPerformed
 
     linhaSelecionada = tblClientesPrincipal.getSelectedRow(); 
-
     if (linhaSelecionada < 0) {
         JOptionPane.showMessageDialog(
             this,
@@ -1033,27 +1032,19 @@ public class Principal extends javax.swing.JFrame {
         );
 
     } else {
-       
         int idCliente = (int) tblClientesPrincipal.getValueAt(linhaSelecionada, 0);
-
-      
-        int confirmacao = JOptionPane.showConfirmDialog(this, 
-                "Tem certeza que deseja excluir o cliente ID: " + idCliente + "?", 
-                "Confirmação de Exclusão", JOptionPane.YES_NO_OPTION);
-
-        if (confirmacao == JOptionPane.YES_OPTION) {
             try {              
-               cc.deletarCliente(idCliente);              
+                cc.deletarCliente(idCliente);              
                 atualizarTabelaClientes("");
-       
-                limparCamposCliente();         
+                limparCamposCliente();
                 JOptionPane.showMessageDialog(this, "Cliente excluído com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
-            } catch (RuntimeException e) {
-                JOptionPane.showMessageDialog(this, 
-                        "Erro ao excluir. O cliente possui veículos vinculados e não pode ser deletado.", 
-                        "Erro de Exclusão", JOptionPane.ERROR_MESSAGE);
+            
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir: " + e.getMessage(), "Erro",
+                        JOptionPane.ERROR_MESSAGE);
             }
-        }
+                
+
     }        
     }//GEN-LAST:event_btnDeletarClienteActionPerformed
 
@@ -1176,10 +1167,13 @@ public class Principal extends javax.swing.JFrame {
         linhaSelecionada = tblCadastroVeiculos.getSelectedRow();
         int idVeiculo = (int) tblCadastroVeiculos.getValueAt(linhaSelecionada, 0);
         
-        String termoDeBusca = String.valueOf(idVeiculo);
-        List<Veiculo> resultado = vc.filtrarVeiculos(termoDeBusca);
         
-        for(Veiculo v : resultado){
+        
+        try{
+            String termoDeBusca = String.valueOf(idVeiculo);
+            List<Veiculo> resultado = vc.filtrarVeiculos(termoDeBusca);
+            
+            for(Veiculo v : resultado){
             if(v.getId() == idVeiculo){
                 txtPlacaVeiculoCadastro.setText(v.getPlaca());
                 txtModeloVeiculoCadastro.setText(v.getModelo());
@@ -1188,6 +1182,14 @@ public class Principal extends javax.swing.JFrame {
                 txtNomeClienteVeiculo.setText(v.getCliente().getNome());
                 break;
             }
+        }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, 
+            "Erro ao carregar dados do veículo: " + e.getMessage(),
+            "Erro", 
+            JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+
         }
     }//GEN-LAST:event_tblCadastroVeiculosMouseClicked
 
@@ -1263,11 +1265,9 @@ public class Principal extends javax.swing.JFrame {
                         "Bloqueado", 
                         JOptionPane.WARNING_MESSAGE);
                         return; 
-            }
+                    }
                     int id = (int) tblOperacao.getValueAt(linhaSelecionada, 0);
-                    oc.atualizarOperacao(id, op); 
-                    System.out.println(id);
-                    System.out.println(op.getVeiculo().getId());
+                    oc.atualizarOperacao(id, op);
                     JOptionPane.showMessageDialog(this, "Operação atualizada com sucesso!");
                 }else {
                     oc.registrarEntrada(op);
@@ -1275,6 +1275,8 @@ public class Principal extends javax.swing.JFrame {
                 }
                 atualizarTabelaOperacoes("");
                 limparCamposOperacao();
+                preencheCbxVaga();
+                
             
             }catch(Exception e){
                 e.printStackTrace(); 
@@ -1416,6 +1418,7 @@ public class Principal extends javax.swing.JFrame {
                 oc.deletarOperacao(id);
                 JOptionPane.showMessageDialog(this, "Operação excluida!");
                 atualizarTabelaOperacoes("");
+                preencheCbxVaga();
             }
           
            }
@@ -1629,10 +1632,8 @@ public void limparCamposOperacao(){
 
 public final void preencheCbxVaga(){
     cbxVagas.removeAllItems();
-    
 
     for (Vaga v : vgc.listarVagas()) {
-        
         if (v.isStatus() == false) {
             cbxVagas.addItem(v);
         }
@@ -1658,17 +1659,25 @@ public void atualizarTabelaVeiculos(String busca) {
         DefaultTableModel model = (DefaultTableModel) tblCadastroVeiculos.getModel();
         model.setRowCount(0);
 
-        List<Veiculo> veiculos = vc.filtrarVeiculos(busca);
+        try{
+            List<Veiculo> veiculos = vc.filtrarVeiculos(busca);
  
 
-        for (com.luizfrancisco.estacionamento.model.Veiculo v : veiculos) {
-            model.addRow(new Object[]{
-                v.getId(),
-                v.getPlaca(),
-                v.getModelo(),
-                v.getCor(),
-                v.getCliente().getNome() 
-            });
+            for (com.luizfrancisco.estacionamento.model.Veiculo v : veiculos) {
+                model.addRow(new Object[]{
+                    v.getId(),
+                    v.getPlaca(),
+                    v.getModelo(),
+                    v.getCor(),
+                    v.getCliente().getNome() 
+                });
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, 
+            "Erro ao carregar dados do veículo: " + e.getMessage(),
+            "Erro", 
+            JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 private void atualizarTabelaOperacoes(String busca) {

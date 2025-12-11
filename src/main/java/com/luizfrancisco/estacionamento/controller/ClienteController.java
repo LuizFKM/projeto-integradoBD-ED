@@ -35,18 +35,13 @@ public class ClienteController {
         }
     }
     
-    public void deletarCliente(int id){
-
-        try{
-            if(id > 0 ){
-                dao.deletar(id);
-            }else{
-                System.out.println("ID do cliente inválido");
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+    public void deletarCliente(int id) throws Exception {
+    
+    if (id <= 0) {
+        throw new Exception("ID do cliente inválido para exclusão.");
     }
+    dao.deletar(id);
+}
     
     public void editarCliente(int id, Cliente c){
         try{

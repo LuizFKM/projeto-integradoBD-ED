@@ -35,7 +35,7 @@ public class VeiculoDAO {
                 System.out.println("ERRO -> " + e);
             }
     }
-public List<Veiculo> listarVeiculo() {
+public List<Veiculo> listarVeiculo()throws SQLException {
     List<Veiculo> listaVeiculos = new ArrayList<>();
     
     String sql = "SELECT v.id_veiculo, v.modelo, v.cor, v.placa,c.id_cliente, c.nome, c.email"
@@ -72,25 +72,21 @@ public List<Veiculo> listarVeiculo() {
     } 
     return listaVeiculos;
 }
-public void deletar(int id) {
+public void deletar(int id) throws SQLException {
 
     String sql = "DELETE FROM veiculo WHERE id_veiculo = ?";
-    
-  
     try(Connection con = Conexao.getConnection();
-        PreparedStatement ps = con.prepareStatement(sql)){
-        
-        
+        PreparedStatement ps = con.prepareStatement(sql)){   
         ps.setInt(1, id);
-        
-
         ps.executeUpdate();
-        
+  
     }catch(SQLException e){
       
-        e.printStackTrace();
-     
-        throw new RuntimeException("Erro ao deletar veículo. Verifique se existem operações vinculadas.", e);
+        if ("23503".equals(e.getSQLState())) {
+                throw new SQLException("Não é possível excluir este Veículo, possui uma operação vinculada.");           
+            } else {
+                throw e; 
+            }
     }
 }
 

@@ -58,13 +58,18 @@ public class VeiculoController {
         }
     }
 
-    public List<Veiculo> filtrarVeiculos(String busca){
+    public List<Veiculo> filtrarVeiculos(String busca) throws Exception{
+        
+        if (busca == null) {
+            return dao.listarVeiculo();
+        }
         String buscaTermo = busca.trim();
         
-        if(buscaTermo.isEmpty()){
+        if (buscaTermo.isEmpty()) {
             return dao.listarVeiculo();
         }else {
             return dao.buscar(buscaTermo);
         }
+        
     }
 }

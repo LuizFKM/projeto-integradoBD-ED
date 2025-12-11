@@ -77,4 +77,14 @@ public class OperacaoController {
         }
     }
     
+    public boolean verificaVeiculoEstacionado(String placaDoVeiculo) {
+    
+    if (placaDoVeiculo == null || placaDoVeiculo.trim().isEmpty()) {
+        return false;
+    }
+
+
+    return this.dao.verificaVeiculoEstacionado(placaDoVeiculo);
+}
+    
 }

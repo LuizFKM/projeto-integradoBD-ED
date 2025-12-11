@@ -57,16 +57,20 @@ public class ClienteDAO {
         }
         return lista;
     }
-    public void deletar(int id) {
+    public void deletar(int id) throws SQLException {
         String sql = "DELETE FROM cliente WHERE id_cliente = ?";
 
         try (Connection con = Conexao.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-
             ps.setInt(1, id);
             ps.executeUpdate();
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }catch(SQLException e){
+            if ("23503".equals(e.getSQLState())) {
+                throw new SQLException("Não é possível excluir este cliente pois ele possui Veículo associados."
+                        + "\n\nExclua os veículos deste cliente primeiro.");           
+            } else {
+                throw e; 
+            }
         }
     }
 public List<Cliente> buscar(String nomeOuCodigo){
