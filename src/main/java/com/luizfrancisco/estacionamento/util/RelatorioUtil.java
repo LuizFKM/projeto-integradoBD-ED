@@ -40,22 +40,16 @@ public static void abrirPDF(String caminho, Map<String, Object> parametros, Conn
             return;
         }
 
-        // --- CORREÇÃO PARA LINUX (POP!_OS / UBUNTU) ---
-        // Isso resolve o erro "GLib-GIO-CRITICAL" e o travamento visual.
-        // Forçamos o Java a usar o visual padrão (Metal) em vez do GTK do Linux.
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // ----------------------------------------------
-
-        // Abre a janela interna do Jasper
-        // 'false' significa que fechar o relatório NÃO fecha o sistema todo
+        
         JasperViewer view = new JasperViewer(print, false);
         view.setTitle("Relatório de Estacionamento");
         view.setVisible(true);
-        view.toFront(); // Traz a janela para frente
+        view.toFront();
 
     } catch (Exception e) {
         e.printStackTrace();

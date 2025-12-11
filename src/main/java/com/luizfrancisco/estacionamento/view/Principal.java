@@ -26,6 +26,9 @@ import com.luizfrancisco.estacionamento.model.EstatisticaVaga;
 import com.luizfrancisco.estacionamento.model.Usuario;
 import com.luizfrancisco.estacionamento.util.ValidadorDeCampos;
 import java.awt.Color;
+import java.text.DecimalFormat;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 
 /**
  *
@@ -63,7 +66,8 @@ public class Principal extends javax.swing.JFrame {
     }
     
     private void iniciarConfiguracoes() {
-        txtValorHora.setText("R$ 0,00");
+        DecimalFormat dFormat = new DecimalFormat("#,##0.00");
+        NumberFormatter formatter = new NumberFormatter(dFormat);
         atualizarTabelaClientes("");
         atualizarTabelaVeiculos("");
         atualizarTabelaVagas("");
@@ -149,11 +153,10 @@ public class Principal extends javax.swing.JFrame {
         lvl = new javax.swing.JLabel();
         lblDadosCodigoOp = new javax.swing.JLabel();
         txtBuscarOperacao = new javax.swing.JTextField();
-        btnBuscarOp = new javax.swing.JButton();
         cbxVagas = new javax.swing.JComboBox<>();
         btnImprimirRelatorio = new javax.swing.JToggleButton();
-        txtValorHora = new javax.swing.JTextField();
         btnLimparOp = new javax.swing.JButton();
+        ftdValorHora = new javax.swing.JFormattedTextField();
         jScrollPane5 = new javax.swing.JScrollPane();
         tblOperacao = new javax.swing.JTable();
         Vagas = new javax.swing.JPanel();
@@ -629,13 +632,6 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        btnBuscarOp.setText("Buscar");
-        btnBuscarOp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarOpActionPerformed(evt);
-            }
-        });
-
         cbxVagas.setBorder(javax.swing.BorderFactory.createTitledBorder("Selecione a vaga"));
         cbxVagas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -652,14 +648,15 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        txtValorHora.setBorder(javax.swing.BorderFactory.createTitledBorder("Valor/Hora"));
-
         btnLimparOp.setText("Limpar");
         btnLimparOp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLimparOpActionPerformed(evt);
             }
         });
+
+        ftdValorHora.setBorder(javax.swing.BorderFactory.createTitledBorder("Valor/Hora R$"));
+        ftdValorHora.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.00"))));
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
         jPanel13.setLayout(jPanel13Layout);
@@ -671,9 +668,7 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addComponent(txtBuscarOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnBuscarOp, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtBuscarOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnImprimirRelatorio, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(3, 3, 3))
@@ -685,9 +680,9 @@ public class Principal extends javax.swing.JFrame {
                                         .addComponent(txtModeloOp, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel13Layout.createSequentialGroup()
                                         .addComponent(cbxVagas, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(txtValorHora, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(ftdValorHora, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(lblBuscarVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel13Layout.createSequentialGroup()
                                         .addComponent(btnSalvarCadastroOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -695,7 +690,7 @@ public class Principal extends javax.swing.JFrame {
                                         .addComponent(btnDeletarOp, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnLimparOp, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(0, 61, Short.MAX_VALUE)))
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel13Layout.createSequentialGroup()
                                 .addGap(80, 80, 80)
@@ -720,9 +715,9 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbxVagas, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(cbxVagas, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtValorHora)
+                                .addComponent(ftdValorHora, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(lblBuscarVeiculo)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -732,7 +727,6 @@ public class Principal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtBuscarOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnBuscarOp)
                             .addComponent(btnImprimirRelatorio, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addGap(0, 14, Short.MAX_VALUE)
@@ -765,15 +759,17 @@ public class Principal extends javax.swing.JFrame {
             }
         });
         jScrollPane5.setViewportView(tblOperacao);
+        if (tblOperacao.getColumnModel().getColumnCount() > 0) {
+            tblOperacao.getColumnModel().getColumn(0).setResizable(false);
+            tblOperacao.getColumnModel().getColumn(4).setResizable(false);
+        }
 
         javax.swing.GroupLayout OperacionalLayout = new javax.swing.GroupLayout(Operacional);
         Operacional.setLayout(OperacionalLayout);
         OperacionalLayout.setHorizontalGroup(
             OperacionalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(OperacionalLayout.createSequentialGroup()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 909, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane5)
         );
         OperacionalLayout.setVerticalGroup(
             OperacionalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1255,6 +1251,7 @@ public class Principal extends javax.swing.JFrame {
                 }
                 atualizarTabelaOperacoes("");
                 limparCamposOperacao();
+                linhaSelecionada = -1;
                 preencheCbxVaga();
                 
             
@@ -1315,10 +1312,6 @@ public class Principal extends javax.swing.JFrame {
         atualizarTabelaVeiculos(buscar);
     }//GEN-LAST:event_btnBuscarVeiculoActionPerformed
 
-    private void btnBuscarOpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarOpActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscarOpActionPerformed
-
     private void rdbLivreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbLivreActionPerformed
             atualizarTabelaVagas(txtBuscarVaga.getText());
     }//GEN-LAST:event_rdbLivreActionPerformed
@@ -1349,8 +1342,7 @@ public class Principal extends javax.swing.JFrame {
                     preencherCliente(this.op.getVeiculo().getCliente());
                 }
                 double valor = op.getValorHora();
-                String valorFormatado = String.format("%.2f", valor);
-                txtValorHora.setText(valorFormatado);
+                ftdValorHora.setValue(valor);
             }
         }
 
@@ -1413,6 +1405,9 @@ public class Principal extends javax.swing.JFrame {
 
     private void btnLimparOpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparOpActionPerformed
         limparCamposOperacao();
+        this.op.setId_operacao(0);
+        linhaSelecionada = -1;
+        atualizarTabelaOperacoes("");
     }//GEN-LAST:event_btnLimparOpActionPerformed
 
 
@@ -1457,7 +1452,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTabbedPane Principal;
     private javax.swing.JPanel Vagas;
     private javax.swing.JPanel Veiculo;
-    private javax.swing.JButton btnBuscarOp;
     private javax.swing.JButton btnBuscarVaga;
     private javax.swing.JButton btnBuscarVeiculo;
     private javax.swing.JButton btnDeletarCliente;
@@ -1472,6 +1466,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton btnSalvarCadastroOperacao;
     private javax.swing.JButton btnSalvarCadastroVeiculo;
     private javax.swing.JComboBox<Vaga> cbxVagas;
+    private javax.swing.JFormattedTextField ftdValorHora;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
@@ -1525,7 +1520,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField txtPlacaOp;
     private javax.swing.JTextField txtPlacaVeiculoCadastro;
     private javax.swing.JTextField txtTelefoneClienteCadastro;
-    private javax.swing.JTextField txtValorHora;
     private javax.swing.ButtonGroup vagasBtnGroup;
     // End of variables declaration//GEN-END:variables
 private Cliente retornaCliente(){
@@ -1558,16 +1552,30 @@ private Veiculo retornaVeiculo(){
         return v;
     }
 private Operacao retornaOperacao(){
-    double precoHora = Double.parseDouble(txtValorHora.getText());
     Operacao op = new Operacao();
-
+    Object valorObj = ftdValorHora.getValue();
+    double valor = 0.0;
+    
+    if (valorObj != null) {
+        valor = ((Number) valorObj).doubleValue();
+    } else {
+    try {
+        String texto = ftdValorHora.getText().replace("R$", "").replace(".", "").replace(",", ".").trim();
+        if(!texto.isEmpty()) {
+            valor = Double.parseDouble(texto);
+        }
+    }catch (NumberFormatException ex) {
+        valor = 0.0;
+    }
+    }
     if(linhaSelecionada > -1 && this.op != null){
         op.setHorarioEntrada(this.op.getHorarioEntrada());
     }else{
         op.setHorarioEntrada(LocalDateTime.now());
     }
     op.setVeiculo(veiculoSelecionado);
-    op.setValorHora(precoHora);
+    valor = Math.abs(valor);
+    op.setValorHora(valor);
     op.getId_operacao();
     return op;
 }
@@ -1603,6 +1611,7 @@ public void limparCamposOperacao(){
         txtModeloOp.setText("");
         txtCorOp.setText("");
         txtNomeClienteOp.setText("");
+        ftdValorHora.setValue(0.0);
 }
 
 public final void preencheCbxVaga(){
@@ -1772,5 +1781,4 @@ private void atualizarEstadoBotaoFinalizar(int idOperacao) {
         btnFinalizarOp.setForeground(Color.DARK_GRAY);
     }
 }
-
 }
