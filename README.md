@@ -10,7 +10,7 @@ O objetivo foi criar uma solução para controle de fluxo de veículos, integran
 
 * **Gestão de Cadastros:** CRUD completo de Clientes e Veículos (com relacionamento).
 * **Controle de Operações:** Registro de entrada/saída, cálculo de permanência e tarifação por hora.
-* **Visualização de vagas:** JPane que possui uma JTable com informções e filtros entre vagas livres/ocupadas
+* **Visualização de vagas:** JPane que possui uma JTable com informções e filtros entre vagas livres/ocupadas.
 * **Visualização de Dados:** Listagem de registros utilizando componentes `JTable`.
 * **Relatório:** Geração de relatório em PDF com **JasperReports**, exibindo:
     * Vaga utilizada.
@@ -32,7 +32,7 @@ Clone o projeto e acesse a pasta:
 
 ```bash
 git clone [https://github.com/LuizFKM/projeto-integradoBD-ED.git](https://github.com/LuizFKM/projeto-integradoBD-ED.git)
-cd projeto
+cd projeto-integradoBD-ED
 ```
 
 ### Configuração do Banco de Dados
